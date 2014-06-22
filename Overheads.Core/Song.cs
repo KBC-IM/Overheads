@@ -84,33 +84,41 @@ namespace Overheads.Core
 
         public void SetVerse(int? overrideCurrentIndex = null)
         {
-            if (overrideCurrentIndex != null)
+            try
             {
-                _currentVerseIndex = overrideCurrentIndex.Value;
-            }
-
-            _fullVerse = Verses.ElementAt(_currentVerseIndex);
-
-            if (_showCords)
-            {
-                CurrentVerse = _fullVerse;
-            }
-            else
-            {
-                var lines = _fullVerse.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                _verseWithoutChords = "";
-                foreach (var line in lines)
+                if (overrideCurrentIndex != null)
                 {
-                    if (!line.Contains("%"))
-                    {
-                        _verseWithoutChords += line + Environment.NewLine;
-                    }
+                    _currentVerseIndex = overrideCurrentIndex.Value;
                 }
 
-                CurrentVerse = _verseWithoutChords;
-            }
+                _fullVerse = Verses.ElementAt(_currentVerseIndex);
 
-            SetFirstLineOfNextVerse();
+                if (_showCords)
+                {
+                    CurrentVerse = _fullVerse;
+                }
+                else
+                {
+                    var lines = _fullVerse.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    _verseWithoutChords = "";
+                    foreach (var line in lines)
+                    {
+                        if (!line.Contains("%"))
+                        {
+                            _verseWithoutChords += line + Environment.NewLine;
+                        }
+                    }
+
+                    CurrentVerse = _verseWithoutChords;
+                }
+
+                SetFirstLineOfNextVerse();
+            }
+            catch (Exception)
+            {
+                CurrentVerse = "There was an error loading the song";
+            }
+            
         }
 
         private void SetFirstLineOfNextVerse()

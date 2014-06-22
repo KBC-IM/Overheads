@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Overheads.Views
 {
@@ -10,12 +11,8 @@ namespace Overheads.Views
         public MainView()
         {
             InitializeComponent();
-        }
-
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            MainGrid.Focus();
+            Loaded += (sender, e) =>
+                    MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
         }
     }
 }

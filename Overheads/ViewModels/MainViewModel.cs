@@ -175,7 +175,7 @@ namespace Overheads.ViewModels
 
         public void NextSearchResult()
         {
-            if (SearchResults == null) return;
+            if (SearchResults == null || !SearchResults.Any()) return;
 
             if (_currentSearchIndex < SearchResults.Count() - 1)
             {
@@ -187,7 +187,7 @@ namespace Overheads.ViewModels
 
         public void PreviousSearchResult()
         {
-            if (SearchResults == null) return;
+            if (SearchResults == null || !SearchResults.Any()) return;
 
             if (_currentSearchIndex > 0)
             {
