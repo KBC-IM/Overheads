@@ -163,14 +163,20 @@ namespace Overheads.ViewModels
                         SearchString = SearchString.Substring(0, SearchString.Length - 1);    
                     }
                     break;
+                case Key.OemMinus:
+                    ScreenSettings.InvertColors();
+                    break;
                 case Key.LeftShift:
                 case Key.RightShift:
+                case Key.Tab:
                     //dont do anything for these keys
                     break;
                 default:
                     SearchString = SearchString + KeyboardHelper.GetCharFromKey(e.Key);
                     break;
             }
+
+            e.Handled = true;
         }
 
         public void NextSearchResult()
