@@ -6,7 +6,7 @@
              xmlns:micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="Black" Focusable="True" Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];">
+    <Grid Background="{Binding ScreenSettings.BackgroundColor}" Focusable="True" Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
@@ -14,18 +14,18 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row ="0" Text="{Binding CurrentSong.Title}" Foreground="#FFF0BC0B" TextAlignment="Center" FontSize="36"></TextBlock>
-            <TextBlock Grid.Row ="1" Text="{Binding CurrentSong.CurrentVerse}" Foreground="#FFFDFDFD" FontSize="20" TextAlignment="Center"></TextBlock>
-            <TextBlock Grid.Row ="2" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="#FFFDFDFD" FontSize="20" TextAlignment="Center"></TextBlock>
+            <TextBlock Grid.Row ="0" Text="{Binding CurrentSong.Title}" Foreground="{Binding ScreenSettings.TitleColor}" TextAlignment="Center" FontSize="36"></TextBlock>
+            <TextBlock Grid.Row ="1" Text="{Binding CurrentSong.CurrentVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" TextAlignment="Center"></TextBlock>
+            <TextBlock Grid.Row ="2" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" TextAlignment="Center"></TextBlock>
             <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="SearchString" Width="500" Grid.Column="0" Background="Black" Foreground="#FF8AECCD"  FontSize="20"></TextBlock>
-                <TextBlock Grid.Column="1" Text="{Binding SelectedSearchSong.Title, Mode=TwoWay}" Foreground="#FF8AECCD" FontSize="20" Background="Black" ></TextBlock>
-                <TextBlock Grid.Column="2" FontSize="20" x:Name="SearchResultsCount" Foreground="#FF8AECCD"></TextBlock>
+                <TextBlock x:Name="SearchString" Width="500" Grid.Column="0" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SearchTextColor}"  FontSize="20"></TextBlock>
+                <TextBlock Grid.Column="1" Text="{Binding SelectedSearchSong.Title, Mode=TwoWay}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20" Background="{Binding ScreenSettings.BackgroundColor}" ></TextBlock>
+                <TextBlock Grid.Column="2" FontSize="20" x:Name="SearchResultsCount" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD"></TextBlock>
             </Grid>
                 
         </Grid>

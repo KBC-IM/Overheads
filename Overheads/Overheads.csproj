@@ -64,6 +64,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Helpers\ScreenSettings.cs" />
     <Compile Include="IShell.cs" />
     <Compile Include="Helpers\KeyboardHelper.cs" />
     <Compile Include="ShellViewModel.cs" />

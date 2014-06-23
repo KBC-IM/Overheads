@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Input;
 using Overheads.Core;
+using Overheads.Helpers;
 using Application = System.Windows.Application;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Screen = Caliburn.Micro.Screen;
@@ -16,6 +17,19 @@ namespace Overheads.ViewModels
         private string _searchString;
         private int _currentSearchIndex;
         private SearchSong _selectedSearchSong;
+        private ScreenSettings _screenSettings;
+
+
+        public ScreenSettings ScreenSettings
+        {
+            get { return _screenSettings; }
+            set
+            {
+                if (Equals(value, _screenSettings)) return;
+                _screenSettings = value;
+                NotifyOfPropertyChange(() => ScreenSettings);
+            }
+        }
 
         public Song CurrentSong
         {
@@ -75,6 +89,11 @@ namespace Overheads.ViewModels
                 NotifyOfPropertyChange(() => SearchResults);
                 NotifyOfPropertyChange(() => SearchResultsCount);
             }
+        }
+
+        public MainViewModel()
+        {
+            ScreenSettings = new ScreenSettings();
         }
 
         protected override void OnActivate()

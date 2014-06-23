@@ -16,6 +16,7 @@ namespace Overheads.Views
             //This happens to be the main grid which has the key capture logic. Thus we are able to capture the keys.
             Loaded += (sender, e) =>
                     MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+
         }
     }
 }
