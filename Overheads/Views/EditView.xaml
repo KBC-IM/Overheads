@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBox Text="{Binding CurrentSong.SongText, Mode=TwoWay}" AcceptsReturn="True" Height="Auto" Width="Auto" TextWrapping="Wrap" FontSize="20"></TextBox>  
+        <TextBox Text="{Binding CurrentSong.SongText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" AcceptsReturn="True" Height="Auto" Width="Auto" TextWrapping="Wrap" FontSize="20"></TextBox>  
     </Grid>
 </UserControl>
