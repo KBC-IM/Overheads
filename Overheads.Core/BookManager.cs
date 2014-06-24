@@ -4,16 +4,11 @@ using System.Linq;
 
 namespace Overheads.Core
 {
-    public class BookManager
+    public static class BookManager
     {
-        public List<Book> Books { get; set; }
+        public static List<Book> Books { get; set; }
 
-        public BookManager()
-        {
-            GetBooks();
-        }
-
-        private void GetBooks()
+        public static void Initialize()
         {
             Books = new List<Book>();
             var dir = Directory.GetCurrentDirectory() + "/books";
@@ -31,7 +26,7 @@ namespace Overheads.Core
             }
         }
 
-        private void LoadSongs(string path, Book book)
+        private static void LoadSongs(string path, Book book)
         {
             book.Songs = new List<SearchSong>();
             var songsList = Directory.GetFiles(path);
@@ -49,29 +44,37 @@ namespace Overheads.Core
                 song.FirstLine = sr.ReadLine() ?? "";
 
                 sr.Close();
-                stream.Close();
 
                 book.Songs.Add(song);
             }
         }
 
-        public Song LoadSong(SearchSong searchSong)
+        public static Song LoadSong(string key)
         {
             var song = new Song();
 
-            var stream = File.OpenRead(searchSong.Key);
+            var stream = File.OpenRead(key);
             var sr = new StreamReader(stream);
             
             var wholeSong = sr.ReadToEnd();
+            song.Key = key;
             song.SetSongText(wholeSong);
 
             sr.Close();
-            stream.Close();
 
             return song;
         }
 
-        public IEnumerable<SearchSong> SearchSongs(string searchString)
+        public static void SaveSong(Song song) 
+        {
+            var stream = File.OpenWrite(song.Key);
+            var sw = new StreamWriter(stream);
+            sw.Write(song.SongText);
+
+            sw.Close();
+        }
+
+        public static IEnumerable<SearchSong> SearchSongs(string searchString)
         {
             if (string.IsNullOrEmpty(searchString))
             {

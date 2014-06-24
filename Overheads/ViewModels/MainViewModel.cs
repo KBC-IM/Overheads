@@ -11,7 +11,6 @@ namespace Overheads.ViewModels
 {
     public class MainViewModel : Screen
     {
-        private BookManager _bookManager;
         private Song _currentSong;
         private List<SearchSong> _searchResults;
         private string _searchString;
@@ -98,7 +97,6 @@ namespace Overheads.ViewModels
 
         protected override void OnActivate()
         {
-            _bookManager = new BookManager();
         }
 
         public void SearchSongs()
@@ -111,7 +109,7 @@ namespace Overheads.ViewModels
                 return;
             }
 
-            var sr = _bookManager.SearchSongs(SearchString);
+            var sr = BookManager.SearchSongs(SearchString);
 
             if (sr != null)
             {
@@ -126,22 +124,19 @@ namespace Overheads.ViewModels
             if (song == null)
             {
                 return;
-            }
+            } 
 
-            CurrentSong = _bookManager.LoadSong(song);
+            CurrentSong = BookManager.LoadSong(song.Key);
             
             SearchResults = null;
             SelectedSearchSong = null;
             SearchString = null;
         }
 
-        public void PreviewKeyUp(KeyEventArgs e)
+        public void OnKeyPress(KeyEventArgs e)
         {
             switch (e.Key)
             {
-                case Key.Escape:
-                    Application.Current.Shutdown(); 
-                    break;
                 case Key.Left:
                     if (CurrentSong != null)
                     {

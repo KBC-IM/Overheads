@@ -13,10 +13,10 @@ namespace Overheads.Core
         private string _title;
         private List<string> _verses;
         private string _currentVerse;
-        private string _songText;
         private bool _showCords;
         private string _fullVerse;
         private string _verseWithoutChords;
+        private string _songText;
 
         public string Title
         {
@@ -51,7 +51,7 @@ namespace Overheads.Core
             }
         }
 
-        public string FirstLineOfNextVerse
+        public string FirstLineOfNextVerse 
         {
             get { return _firstLineOfNextVerse; }
             set
@@ -61,6 +61,19 @@ namespace Overheads.Core
                 OnPropertyChanged("FirstLineOfNextVerse");
             }
         }
+
+        public string SongText
+        {
+            get { return _songText; }
+            set
+            {
+                if (value == _songText) return;
+                _songText = value;
+                OnPropertyChanged("SongText");
+            }
+        }
+
+        public string Key { get; set; }
 
         public Song()
         {
@@ -75,8 +88,8 @@ namespace Overheads.Core
 
         public void SetSongText(string text)
         {
-            _songText = text;
-            var songSections = _songText.Split('=');
+            SongText = text;
+            var songSections = SongText.Split('=');
             Title = songSections.First();
             Verses = songSections.Skip(1).Take(songSections.Length - 1).ToList();
             SetVerse();

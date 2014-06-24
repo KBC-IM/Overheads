@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"> 
     <Grid Background="{Binding ScreenSettings.BackgroundColor}" Focusable="True" Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];">
         <Grid>
             <Grid.RowDefinitions>
