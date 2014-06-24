@@ -55,7 +55,6 @@ namespace Overheads {
             }
             else
             {
-                HackTheFocus();
                 BookManager.SaveSong(Edit.CurrentSong);
                 ActivateItem(Main);
                 Main.CurrentSong = BookManager.LoadSong(Edit.CurrentSong.Key);
@@ -65,7 +64,14 @@ namespace Overheads {
 
         public void HackTheFocus()
         {
-            ((ShellView) this.GetView()).MainGrid.Focus();
+            var view = ((ShellView)this.GetView());
+            while (view.IsFocused == false)
+            {
+                FocusManager.SetIsFocusScope(view, true);
+                FocusManager.SetFocusedElement(view, view);
+            }
+
+            view.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
         }
     }
 }
