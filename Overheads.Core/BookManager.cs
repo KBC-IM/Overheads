@@ -18,7 +18,8 @@ namespace Overheads.Core
             {
                 var book = new Book
                     {
-                        Key = bookdir
+                        Key = bookdir,
+                        Title = Path.GetFileName(bookdir)
                     };
 
                 Books.Add(book);
@@ -74,16 +75,21 @@ namespace Overheads.Core
             sw.Close();
         }
 
-        public static IEnumerable<SearchSong> SearchSongs(string searchString)
+        public static IEnumerable<SearchSong> SearchSongs(string searchString, string bookKey = null)
         {
             if (string.IsNullOrEmpty(searchString))
             {
                 return null;
             }
 
-            return
-                Books.SelectMany(x => x.Songs)
-                .Where(x => x.FirstLine.ToUpper().Contains(searchString.ToUpper()) || x.Title.ToUpper().Contains(searchString.ToUpper()));
+            var query = Books.SelectMany(x => x.Songs);
+
+            if (bookKey != null)
+            {
+                query = Books.Where(x => x.Key == bookKey).SelectMany(x => x.Songs);
+            }
+                
+            return query.Where(x => x.FirstLine.ToUpper().Contains(searchString.ToUpper()) || x.Title.ToUpper().Contains(searchString.ToUpper()));
         }
     }
 }

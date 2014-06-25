@@ -4,8 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
+             xmlns:helpers="clr-namespace:Overheads.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"> 
+    <UserControl.Resources>
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid Background="{Binding ScreenSettings.BackgroundColor}" Focusable="True" Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];">
         <Grid>
             <Grid.RowDefinitions>
@@ -17,15 +21,21 @@
             <TextBlock Grid.Row ="0" Text="{Binding CurrentSong.Title}" Foreground="{Binding ScreenSettings.TitleColor}" TextAlignment="Center" FontSize="36"></TextBlock>
             <TextBlock Grid.Row ="1" Text="{Binding CurrentSong.CurrentVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" TextAlignment="Center"></TextBlock>
             <TextBlock Grid.Row ="2" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" TextAlignment="Center"></TextBlock>
-            <Grid Grid.Row="3">
+            <Grid Grid.Row="3" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="SearchString" Width="500" Grid.Column="0" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SearchTextColor}"  FontSize="20"></TextBlock>
-                <TextBlock Grid.Column="1" Text="{Binding SelectedSearchSong.Title, Mode=TwoWay}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20" Background="{Binding ScreenSettings.BackgroundColor}" ></TextBlock>
-                <TextBlock Grid.Column="2" FontSize="20" x:Name="SearchResultsCount" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD"></TextBlock>
+                <TextBlock x:Name="SearchString" Width="500" Grid.Column="0" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20"></TextBlock>
+                <TextBlock Text="{Binding CurrentBook.Title, FallbackValue=All}" Grid.Column="1" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20" Margin="10,0"></TextBlock>
+                <TextBlock Grid.Column="2" Text="{Binding SelectedSearchSong.Title}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20" Background="{Binding ScreenSettings.BackgroundColor}" ></TextBlock>
+                <TextBlock Grid.Column="3" FontSize="20" x:Name="CurrentSearchIndex" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Right"></TextBlock>
+                <TextBlock Grid.Column="4" FontSize="20" Text="of" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Column="5" FontSize="20" x:Name="SearchResultsCount" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Left"></TextBlock>
             </Grid>
                 
         </Grid>

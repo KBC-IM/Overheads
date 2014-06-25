@@ -17,7 +17,17 @@ namespace Overheads.ViewModels
         private int _currentSearchIndex;
         private SearchSong _selectedSearchSong;
         private ScreenSettings _screenSettings;
+        private Book _currentBook;
 
+        public bool IsSearching
+        {
+            get { return string.IsNullOrEmpty(SearchString) == false; }
+        }
+
+        public int CurrentSearchIndex
+        {
+            get { return _currentSearchIndex + 1; }
+        }
 
         public ScreenSettings ScreenSettings
         {
@@ -42,6 +52,17 @@ namespace Overheads.ViewModels
             }
         }
 
+        public Book CurrentBook
+        {
+            get { return _currentBook; }
+            set
+            {
+                if (Equals(value, _currentBook)) return;
+                _currentBook = value;
+                NotifyOfPropertyChange(() => CurrentBook);
+            }
+        }
+
         public SearchSong SelectedSearchSong
         {
             get { return _selectedSearchSong; }
@@ -50,6 +71,7 @@ namespace Overheads.ViewModels
                 if (Equals(value, _selectedSearchSong)) return;
                 _selectedSearchSong = value;
                 NotifyOfPropertyChange(() => SelectedSearchSong);
+                NotifyOfPropertyChange(() => CurrentSearchIndex);
             }
         }
 
@@ -62,6 +84,7 @@ namespace Overheads.ViewModels
                 _searchString = value;
                 SearchSongs();
                 NotifyOfPropertyChange(() => SearchString);
+                NotifyOfPropertyChange(() => IsSearching);
             }
         }
 
@@ -109,7 +132,9 @@ namespace Overheads.ViewModels
                 return;
             }
 
-            var sr = BookManager.SearchSongs(SearchString);
+            var bookKey = CurrentBook != null ? CurrentBook.Key : null;
+
+            var sr = BookManager.SearchSongs(SearchString, bookKey);
 
             if (sr != null)
             {
@@ -180,6 +205,19 @@ namespace Overheads.ViewModels
                 case Key.OemMinus:
                     ScreenSettings.InvertColors();
                     break;
+                case Key.F1:
+                    SetCurrentBook(1);
+                    break;
+                case Key.F2:
+                    SetCurrentBook(2);
+                    break;
+                case Key.F3:
+                    SetCurrentBook(3);
+                    break;
+                case Key.F4:
+                    SetCurrentBook(4);
+                    break;
+
                 case Key.LeftShift:
                 case Key.RightShift:
                 case Key.Tab:
@@ -191,6 +229,23 @@ namespace Overheads.ViewModels
             }
 
             e.Handled = true;
+        }
+
+        public void SetCurrentBook(int sequence)
+        {
+            if (BookManager.Books.Count >= sequence)
+            {
+                var potentialBook = BookManager.Books[sequence - 1];
+
+                if (potentialBook == CurrentBook)
+                {
+                    CurrentBook = null;
+                }
+                else
+                {
+                    CurrentBook = potentialBook;
+                }
+            } 
         }
 
         public void NextSearchResult()

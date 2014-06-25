@@ -12,6 +12,7 @@ namespace Overheads {
 
         public ShellViewModel()
         {
+            DisplayName = "Overheads";
             Main = new MainViewModel();
             Edit = new EditViewModel();
         }
