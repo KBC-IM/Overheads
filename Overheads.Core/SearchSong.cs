@@ -6,5 +6,12 @@ namespace Overheads.Core
         public string Title { get; set; }
         public string FirstLine { get; set; }
         public string Key { get; set; }
+        public string Number { get; set; }
+        public string Book { get; set; }
+
+        public string BookNumberAndTitle
+        {
+            get { return string.Format("{0} {1} - {2}", Book, Number, Title); }
+        }
     }
 }

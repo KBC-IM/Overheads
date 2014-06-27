@@ -23,16 +23,16 @@
             <TextBlock Grid.Row ="2" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" TextAlignment="Center"></TextBlock>
             <Grid Grid.Row="3" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="40"/>
                     <ColumnDefinition Width="25"/>
                     <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="SearchString" Width="500" Grid.Column="0" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20"></TextBlock>
-                <TextBlock Text="{Binding CurrentBook.Title, FallbackValue=All}" Grid.Column="1" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20" Margin="10,0"></TextBlock>
-                <TextBlock Grid.Column="2" Text="{Binding SelectedSearchSong.Title}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20" Background="{Binding ScreenSettings.BackgroundColor}" ></TextBlock>
+                <TextBlock Text="{Binding CurrentBook.Title, FallbackValue=All}" Grid.Column="0" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20" ></TextBlock>
+                <TextBlock x:Name="SearchString" Grid.Column="1" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20" Margin="10,0"></TextBlock>
+                <TextBlock Grid.Column="2" Text="{Binding SelectedSearchSong.BookNumberAndTitle}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="20" Background="{Binding ScreenSettings.BackgroundColor}" ></TextBlock>
                 <TextBlock Grid.Column="3" FontSize="20" x:Name="CurrentSearchIndex" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Right"></TextBlock>
                 <TextBlock Grid.Column="4" FontSize="20" Text="of" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Center"></TextBlock>
                 <TextBlock Grid.Column="5" FontSize="20" x:Name="SearchResultsCount" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Left"></TextBlock>

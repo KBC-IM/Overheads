@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Overheads.Core
 {
@@ -36,11 +37,17 @@ namespace Overheads.Core
             {
                 var song = new SearchSong();
                 song.Key = s;
+                string fileName = Path.GetFileName(s);
+                if (fileName != null && fileName.Length >= 6)
+                {
+                    song.Book = fileName.Substring(0, 3);
+                    song.Number = fileName.Substring(3, 3);
+                }
 
                 var stream = File.OpenRead(s);
                 var sr = new StreamReader(stream);
 
-                song.Title = sr.ReadLine() ?? "";//Title is always first line
+                song.Title = sr.ReadLine() ?? ""; //Title is always first line
                 sr.ReadLine(); //skip the = sign
                 song.FirstLine = sr.ReadLine() ?? "";
 
@@ -87,6 +94,12 @@ namespace Overheads.Core
             if (bookKey != null)
             {
                 query = Books.Where(x => x.Key == bookKey).SelectMany(x => x.Songs);
+            }
+
+            var ex = new Regex("[0-9]");
+            if (ex.IsMatch(searchString))
+            {
+                return query.Where(x => x.Number.StartsWith(searchString)).OrderBy(x => x.Number);
             }
                 
             return query.Where(x => x.FirstLine.ToUpper().Contains(searchString.ToUpper()) || x.Title.ToUpper().Contains(searchString.ToUpper()));

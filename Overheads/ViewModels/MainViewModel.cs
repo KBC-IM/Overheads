@@ -26,7 +26,15 @@ namespace Overheads.ViewModels
 
         public int CurrentSearchIndex
         {
-            get { return _currentSearchIndex + 1; }
+            get
+            {
+                if (SearchResults != null && SearchResults.Any())
+                {
+                    return _currentSearchIndex + 1;
+                }
+
+                return 0;
+            }
         }
 
         public ScreenSettings ScreenSettings
