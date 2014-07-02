@@ -18,7 +18,6 @@ namespace Overheads {
         }
         protected override void OnActivate()
         {
-            BookManager.Initialize();
             ActivateItem(Main);
             base.OnActivate();
         }

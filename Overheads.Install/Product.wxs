@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Overheads" Language="1033" Version="1.0.0.0" Manufacturer="JBloom" UpgradeCode="f9352001-3c16-46da-8852-6a048be5c07d">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of Overheads is already installed." />
+		<MediaTemplate />
+
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Overheads" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+    <Property Id="WixShellExecTarget" Value="[#overheads]" />
+    <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+
+		<Feature Id="ProductFeature" Title="Overheads" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+    
+    <UIRef Id="WixUI_Minimal"/>
+	</Product>
+  
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="DesktopFolder" SourceName="Desktop" />
+			<Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="Overheads">
+          <Directory Id="booksdir" Name="books">
+          </Directory>
+        </Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			 <Component Id="OverheadsComponent" Guid="b04546fc-1a19-45fa-b689-66a49cfa8c03">
+         <File Source="..\Overheads\bin\debug\Overheads.exe" Id="overheads" >
+           <Shortcut
+            Id="ApplicationDesktopShortcut"
+            Name="Overheads"
+            Description="Song Displayer"
+            Directory="DesktopFolder"
+            WorkingDirectory="INSTALLFOLDER"
+            Advertise="yes"/>
+         </File>
+			 </Component>
+      <Component Id="OverheadsCoreComponent" Guid="50725219-1567-4a41-a953-3af93c94b115">
+        <File Source="..\Overheads\bin\debug\Overheads.Core.dll" Id="overheadscore"/>
+      </Component>
+      <Component Id="CaliburnMicroComponent" Guid="0fc3c8ee-cc66-4947-ba6d-1868da59ecab">
+        <File Source="..\Overheads\bin\debug\Caliburn.Micro.dll" Id="caliburnmicro"/>
+      </Component>
+      <Component Id="CaliburnMicroPlatformComponent" Guid="a266dbea-b0f2-465c-9aa5-4da12d30ad34">
+        <File Source="..\Overheads\bin\debug\Caliburn.Micro.Platform.dll" Id="caliburnmicroplatform"/>
+      </Component>
+      <Component Id="InteractivityComponent" Guid="a7f7b282-32a1-44be-8176-41d402e5fc02">
+        <File Source="..\Overheads\bin\debug\System.Windows.Interactivity.dll" Id="interactivity"/>
+      </Component>
+    </ComponentGroup>
+	</Fragment>
+</Wix>

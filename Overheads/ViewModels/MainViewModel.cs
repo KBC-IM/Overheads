@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Overheads.Core;
@@ -128,6 +129,18 @@ namespace Overheads.ViewModels
 
         protected override void OnActivate()
         {
+            try
+            {
+                BookManager.Initialize();
+            }
+            catch (Exception)
+            {
+                CurrentSong = new Song
+                    {
+                        Title = "We have a problem",
+                        CurrentVerse = "There was an error loading the books directory. Make sure it exists."
+                    };
+            }
         }
 
         public void SearchSongs()
