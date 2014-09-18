@@ -30,6 +30,7 @@ namespace Overheads {
                     Application.Current.Shutdown();
                     break;
                 case Key.OemTilde:
+                case Key.Oem8:
                     GoIntoEditMode();
                     e.Handled = true;
                     break;
