@@ -18,6 +18,7 @@ namespace Overheads {
         }
         protected override void OnActivate()
         {
+	    //This activates the main viewmodel
             ActivateItem(Main);
             base.OnActivate();
         }
