@@ -5,23 +5,41 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              xmlns:helpers="clr-namespace:Overheads.Helpers"
+             xmlns:local="clr-namespace:Overheads.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"> 
     <UserControl.Resources>
         <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <DataTemplate x:Key="VerseTemplate">
+            <Grid Background="{Binding Tag.ScreenSettings.BackgroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Focusable="False">
+                <TextBlock Text="{Binding Text}" 
+                           Visibility="{Binding IsChords, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter} }"
+                           Foreground="{Binding Tag.ScreenSettings.ForegroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
+                           FontSize="20" 
+                           TextAlignment="Center"></TextBlock>
+                
+                <TextBlock Text="{Binding Text}" 
+                           Visibility="{Binding IsChords, Converter={StaticResource BoolToVisibilityConverter} }"
+                           Foreground="{Binding Tag.ScreenSettings.SpecialColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
+                           FontSize="20" 
+                           TextAlignment="Center"></TextBlock>
+            </Grid>        
+        </DataTemplate>
     </UserControl.Resources>
-    <Grid Background="{Binding ScreenSettings.BackgroundColor}" Focusable="True" Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];">
+    
+    <Grid Background="{Binding ScreenSettings.BackgroundColor}" Focusable="True" Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];">       
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row ="0" Text="{Binding CurrentSong.Title}" Foreground="{Binding ScreenSettings.TitleColor}" TextAlignment="Center" FontSize="36"></TextBlock>
-            <TextBlock Grid.Row ="1" Text="{Binding CurrentSong.CurrentVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" TextAlignment="Center"></TextBlock>
-            <TextBlock Grid.Row ="2" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" TextAlignment="Center"></TextBlock>
-            <Grid Grid.Row="3" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
+            <ItemsControl Grid.Row ="1" Tag="{Binding}" ItemsSource="{Binding CurrentSong.CurrentVerse.DisplayLines}" ItemTemplate="{StaticResource VerseTemplate}" FontSize="20"></ItemsControl>
+            <TextBlock Grid.Row ="3" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" TextAlignment="Center"></TextBlock>
+            <Grid Grid.Row="4" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="200"/>
@@ -36,6 +54,15 @@
                 <TextBlock Grid.Column="3" FontSize="20" x:Name="CurrentSearchIndex" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Right"></TextBlock>
                 <TextBlock Grid.Column="4" FontSize="20" Text="of" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Center"></TextBlock>
                 <TextBlock Grid.Column="5" FontSize="20" x:Name="SearchResultsCount" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Left"></TextBlock>
+            </Grid>
+            <Grid Grid.Row="4" Visibility="{Binding IsSearching, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="105"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="3" FontSize="20" Text="{Binding CurrentSong.BookNumber}" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Left"></TextBlock>
             </Grid>
                 
         </Grid>

@@ -9,6 +9,18 @@ namespace Overheads.Helpers
         private SolidColorBrush _foregroundColor;
         private SolidColorBrush _backgroundColor;
         private SolidColorBrush _searchTextColor;
+        private SolidColorBrush _specialColor;
+
+        public SolidColorBrush SpecialColor
+        {
+            get { return _specialColor; }
+            set
+            {
+                if (value.Equals(_specialColor)) return;
+                _specialColor = value;
+                NotifyOfPropertyChange(() => SpecialColor);
+            }
+        }
 
         public SolidColorBrush BackgroundColor
         {
@@ -77,6 +89,7 @@ namespace Overheads.Helpers
             ForegroundColor = new SolidColorBrush(Colors.Black); 
             TitleColor = new SolidColorBrush(Colors.DarkGoldenrod);
             SearchTextColor = new SolidColorBrush(Colors.DarkSlateGray);
+            SpecialColor = new SolidColorBrush(Colors.Purple);
         }
 
         private void SetDarkTheme()
@@ -85,6 +98,7 @@ namespace Overheads.Helpers
             ForegroundColor = new SolidColorBrush(Colors.WhiteSmoke); 
             TitleColor = new SolidColorBrush(Colors.Gold);
             SearchTextColor = new SolidColorBrush(Colors.Cyan);
+            SpecialColor = new SolidColorBrush(Colors.MediumPurple);
         }
     }
 }

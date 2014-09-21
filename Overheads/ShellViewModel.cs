@@ -53,6 +53,10 @@ namespace Overheads {
                     Edit.CurrentSong = Main.CurrentSong;
                     ActivateItem(Edit);
                 }
+                else
+                {
+                    //create a new file and save it
+                }
             }
             else
             {

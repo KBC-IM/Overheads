@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Overheads.Core
 {
-    public class Book : INotifyPropertyChanged
+    public class Book : NotifyBase
     {
         private string _title;
         public string Key { get; set; }
@@ -19,13 +19,5 @@ namespace Overheads.Core
         }
 
         public List<SearchSong> Songs { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

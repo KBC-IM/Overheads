@@ -6,16 +6,14 @@ using System.Runtime.CompilerServices;
 
 namespace Overheads.Core
 {
-    public class Song : INotifyPropertyChanged
+    public class Song : NotifyBase
     {
         private string _firstLineOfNextVerse;
         private int _currentVerseIndex;
         private string _title;
-        private List<string> _verses;
-        private string _currentVerse;
+        private List<Verse> _verses;
+        private Verse _currentVerse;
         private bool _showCords;
-        private string _fullVerse;
-        private string _verseWithoutChords;
         private string _songText;
 
         public string Title
@@ -29,7 +27,7 @@ namespace Overheads.Core
             }
         }
 
-        public List<string> Verses
+        public List<Verse> Verses
         {
             get { return _verses; }
             set
@@ -40,7 +38,7 @@ namespace Overheads.Core
             }
         }
 
-        public string CurrentVerse
+        public Verse CurrentVerse
         {
             get { return _currentVerse; }
             set
@@ -78,6 +76,7 @@ namespace Overheads.Core
         public Song()
         {
             _currentVerseIndex = 0;
+            Verses = new List<Verse>();
         }
 
         public void ToggleCords()
@@ -91,7 +90,16 @@ namespace Overheads.Core
             SongText = text;
             var songSections = SongText.Split('=');
             Title = songSections.First();
-            Verses = songSections.Skip(1).Take(songSections.Length - 1).ToList();
+            var verseTexts = songSections.Skip(1).Take(songSections.Length - 1).ToList();
+
+            foreach(var verseText in verseTexts)
+            {
+                var verse = new Verse();
+                verse.Setup(verseText);
+
+                Verses.Add(verse);
+            }
+
             SetVerse();
         }
 
@@ -104,32 +112,23 @@ namespace Overheads.Core
                     _currentVerseIndex = overrideCurrentIndex.Value;
                 }
 
-                _fullVerse = Verses.ElementAt(_currentVerseIndex);
-
-                if (_showCords)
+                CurrentVerse = Verses.ElementAt(_currentVerseIndex);
+                
+                if(_showCords)
                 {
-                    CurrentVerse = _fullVerse;
+                    CurrentVerse.ShowChords();
                 }
                 else
                 {
-                    var lines = _fullVerse.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                    _verseWithoutChords = "";
-                    foreach (var line in lines)
-                    {
-                        if (!line.Contains("%"))
-                        {
-                            _verseWithoutChords += line + Environment.NewLine;
-                        }
-                    }
-
-                    CurrentVerse = _verseWithoutChords;
+                    CurrentVerse.HideChords();
                 }
 
                 SetFirstLineOfNextVerse();
             }
             catch (Exception)
             {
-                CurrentVerse = "There was an error loading the song";
+                CurrentVerse = new Verse();
+                CurrentVerse.SetupErrorVerse();
             }
             
         }
@@ -140,14 +139,9 @@ namespace Overheads.Core
 
             if (nextVerse != null)
             {
-                var nextVerseLines = nextVerse.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                var nextLine = nextVerseLines.First();
-                if (nextLine.Contains("%"))
-                {
-                    nextLine = nextVerseLines.Skip(1).First();
-                }
+                var nextLine =  nextVerse.FirstLine;
 
-                FirstLineOfNextVerse = nextLine + "...";
+                FirstLineOfNextVerse = nextLine.Text + "...";
             }
             else
             {
@@ -178,14 +172,6 @@ namespace Overheads.Core
         public void Refresh()
         {
             SetVerse(0);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

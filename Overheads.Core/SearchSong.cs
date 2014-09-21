@@ -13,5 +13,10 @@ namespace Overheads.Core
         {
             get { return string.Format("{0} {1} - {2}", Book, Number, Title); }
         }
+
+        public string BookNumber
+        {
+            get { return string.Format("{0} {1}", Book, Number); }
+        }
     }
 }

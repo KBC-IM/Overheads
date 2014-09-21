@@ -137,9 +137,11 @@ namespace Overheads.ViewModels
             {
                 CurrentSong = new Song
                     {
-                        Title = "We have a problem",
-                        CurrentVerse = "There was an error loading the books directory. Make sure it exists."
+                        Title = "We have a problem"
                     };
+
+                CurrentSong.CurrentVerse = new Verse();
+                CurrentSong.CurrentVerse.SetupErrorVerse();
             }
         }
 
@@ -225,6 +227,9 @@ namespace Overheads.ViewModels
                     break;
                 case Key.OemMinus:
                     ScreenSettings.InvertColors();
+                    break;
+                case Key.OemPlus:
+                    CurrentSong.ToggleCords();
                     break;
                 case Key.F1:
                     SetCurrentBook(1);
