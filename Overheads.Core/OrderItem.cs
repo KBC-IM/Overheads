@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Overheads.Core
 {
-    public enum LineType
+    public class OrderItem
     {
-        Configuration,
-        Chord,
-        Text,
-        Repeat
+        public int VerseNumber { get; set; }
+        public int RepeatCount { get; set; }
     }
 }

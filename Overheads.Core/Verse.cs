@@ -9,6 +9,7 @@ namespace Overheads.Core
     public class Verse : NotifyBase
     {
         public List<Line> AllLines { get; set; }
+        public int VerseNumber { get; set; }
 
         private List<Line> _displayLines;
         public List<Line> DisplayLines
@@ -33,45 +34,54 @@ namespace Overheads.Core
                 OnPropertyChanged("FirstLine");
             }
         }
-        
-        public Verse()
+
+        public Verse(string verseText, bool showChords, int verseNumber)
         {
             DisplayLines = new List<Line>();
             AllLines = new List<Line>();
-        }
 
-        public void Setup(string verseText)
-        {
+            VerseNumber = verseNumber;
+
             var lines = verseText.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var lineText in lines)
             {
-                var line = new Line();
-                var trimmedLineText = lineText.Trim();
-
-                if (trimmedLineText.EndsWith("%"))
-                {
-                    line.Type = LineType.Chord;
-
-                    line.Text = trimmedLineText.Substring(0, trimmedLineText.Length - 1);
-                }
-                else
-                {
-                    line.Type = LineType.Text;
-                    line.Text = trimmedLineText;
-                }
-
-                AllLines.Add(line);
+                AllLines.Add(new Line(lineText));
             }
 
-            HideChords();
-            FirstLine = AllLines.First(x => x.Type == LineType.Text);
+            if(showChords)
+            {
+                ShowChords();
+            }
+            else
+            {
+                HideChords();
+            } 
+
+            FirstLine = AllLines.FirstOrDefault(x => x.Type == LineType.Text);
+        }
+
+        public void AddRepeatLine(int numberOfRepeats)
+        {
+            //We have already added the repeat line
+            if (AllLines.Any(x => x.Type == LineType.Repeat))
+            {
+                return;
+            }
+
+            var repeat = "repeat";
+            if(numberOfRepeats > 1)
+            {
+                repeat = string.Format("{0} {1}x", repeat, numberOfRepeats);
+            }
+
+            var line = new Line("(" + repeat + ")", LineType.Repeat);
+
+            AllLines.Add(line);
         }
 
         public void SetupErrorVerse()
         {
-            var line = new Line();
-            line.Type = LineType.Text;
-            line.Text = "There was an error loading the song";
+            var line = new Line("There was an error loading the song");
 
             AllLines.Add(line);
             DisplayLines.Add(line);
@@ -85,7 +95,7 @@ namespace Overheads.Core
 
         public void HideChords()
         {
-            DisplayLines = AllLines.Where(x => x.Type == LineType.Text).ToList();
+            DisplayLines = AllLines.Where(x => x.Type == LineType.Text || x.Type == LineType.Repeat).ToList();
         }
     }
 }

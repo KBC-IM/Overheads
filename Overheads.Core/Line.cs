@@ -22,9 +22,34 @@ namespace Overheads.Core
 
         public LineType Type { get; set; }
 
-        public bool IsChords
+        public bool IsNotText
         {
-            get { return Type == LineType.Chord; }
+            get { return Type == LineType.Chord || Type == LineType.Repeat; }
         }
+
+        public Line(string lineText, LineType? overrideLineType = null)
+        {
+            var trimmedLineText = lineText.Trim();
+
+            if(overrideLineType != null)
+            {
+                Type = overrideLineType.Value;
+                Text = lineText;
+            }
+            //The % sign at the end of the line is a convention 
+            //that indicates that the line is a set of chords
+            else if (trimmedLineText.EndsWith("%"))
+            {
+                Type = LineType.Chord;
+
+                Text = trimmedLineText.Substring(0, trimmedLineText.Length - 1);
+            }
+            else
+            {
+                Type = LineType.Text;
+                Text = trimmedLineText;
+            }
+        }
+            
     }
 }

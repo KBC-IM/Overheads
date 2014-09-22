@@ -135,13 +135,7 @@ namespace Overheads.ViewModels
             }
             catch (Exception)
             {
-                CurrentSong = new Song
-                    {
-                        Title = "We have a problem"
-                    };
-
-                CurrentSong.CurrentVerse = new Verse();
-                CurrentSong.CurrentVerse.SetupErrorVerse();
+                CurrentSong = new Song("We have a problem", "NoKey");
             }
         }
 
@@ -175,7 +169,8 @@ namespace Overheads.ViewModels
             } 
 
             CurrentSong = BookManager.LoadSong(song.Key);
-            
+            CurrentSong.BookNumber = song.BookNumber;
+
             SearchResults = null;
             SelectedSearchSong = null;
             SearchString = null;
@@ -198,7 +193,7 @@ namespace Overheads.ViewModels
                     }
                     break;
                 case Key.Space:
-                    if (SearchString.Length > 0)
+                    if (SearchString != null && SearchString.Length > 0)
                     {
                         SearchString = SearchString + " ";
                     }

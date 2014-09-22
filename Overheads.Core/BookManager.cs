@@ -47,7 +47,7 @@ namespace Overheads.Core
                 var stream = File.OpenRead(s);
                 var sr = new StreamReader(stream);
 
-                song.Title = sr.ReadLine() ?? ""; //Title is always first line
+                song.Title = GetTitle(sr);
                 sr.ReadLine(); //skip the = sign
                 song.FirstLine = sr.ReadLine() ?? "";
 
@@ -56,17 +56,44 @@ namespace Overheads.Core
                 book.Songs.Add(song);
             }
         }
+        
+        private static string GetTitle(StreamReader sr)
+        {
+            var potentialTitle = sr.ReadLine() ?? "";
+            var splitTitle = potentialTitle.Split(':');
+            
+            if (splitTitle.Count() == 2)
+            {
+                var headerValue = splitTitle[0].ToLower();
+
+                //The : defines header values but a colon can also exist in the title
+                //So we need to check if we are getting header values or not
+                if( headerValue == HeaderValues.Title)
+                {
+                    return splitTitle[1];
+                }
+                else if (HeaderValues.IsHeaderValue(headerValue))
+                {
+                    return GetTitle(sr);
+                }
+                else
+                {
+                    return potentialTitle;
+                }
+            }
+            else
+            {
+                return potentialTitle;
+            }
+        }
 
         public static Song LoadSong(string key)
         {
-            var song = new Song();
-
             var stream = File.OpenRead(key);
             var sr = new StreamReader(stream);
             
             var wholeSong = sr.ReadToEnd();
-            song.Key = key;
-            song.SetSongText(wholeSong);
+            var song = new Song(wholeSong, key);
 
             sr.Close();
 

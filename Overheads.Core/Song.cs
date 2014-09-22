@@ -11,10 +11,24 @@ namespace Overheads.Core
         private string _firstLineOfNextVerse;
         private int _currentVerseIndex;
         private string _title;
+        private string _bookNumber;
         private List<Verse> _verses;
         private Verse _currentVerse;
         private bool _showCords;
         private string _songText;
+        private List<OrderItem> _order;
+        private string _language;
+
+        public string BookNumber
+        {
+            get { return _bookNumber; }
+            set
+            {
+                if (value == _bookNumber) return;
+                _bookNumber = value;
+                OnPropertyChanged("BookNumber");
+            }
+        }
 
         public string Title
         {
@@ -73,10 +87,36 @@ namespace Overheads.Core
 
         public string Key { get; set; }
 
-        public Song()
+        public Song(string text, string key)
         {
+            Key = key;
             _currentVerseIndex = 0;
             Verses = new List<Verse>();
+
+            SongText = text;
+            var songSections = SongText.Split('=');
+
+            ProcessHeader(songSections.First());
+            
+            var verseTexts = songSections.Skip(1).Take(songSections.Length - 1).ToList();
+            var verseNumber = 1;
+
+            foreach (var verseText in verseTexts)
+            {
+                Verses.Add(new Verse(verseText, _showCords, verseNumber));
+                verseNumber++;
+            }
+
+            if (_order == null)
+            {
+                _order = Verses.Select(x => new OrderItem
+                {
+                    VerseNumber = x.VerseNumber,
+                    RepeatCount = 0
+                }).ToList();
+            }
+
+            SetVerse();
         }
 
         public void ToggleCords()
@@ -85,22 +125,60 @@ namespace Overheads.Core
             SetVerse();
         }
 
-        public void SetSongText(string text)
+        private void ProcessHeader(string header)
         {
-            SongText = text;
-            var songSections = SongText.Split('=');
-            Title = songSections.First();
-            var verseTexts = songSections.Skip(1).Take(songSections.Length - 1).ToList();
-
-            foreach(var verseText in verseTexts)
+            var headerParts = header.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            
+            if(headerParts.Count() == 1)
             {
-                var verse = new Verse();
-                verse.Setup(verseText);
-
-                Verses.Add(verse);
+                Title = headerParts.First();
             }
+            else
+            {
+                foreach(var part in headerParts)
+                {
+                    var keyValue = part.Split(':');
+                    if(keyValue[0].ToLower() == "title")
+                    {
+                        Title = keyValue[1];
+                    }
+                    else if (keyValue[0].ToLower() == "order")
+                    {
+                        PreprocessOrder(keyValue[1]);
+                    }
+                    else if (keyValue[0].ToLower() == "language")
+                    {
+                        _language = keyValue[1];
+                    }
+                }
+            }
+        }
 
-            SetVerse();
+        private void PreprocessOrder(string orderString)
+        {
+            _order = new List<OrderItem>();
+            var orderList = orderString.Split(',');
+            OrderItem currentOrderItem = null;
+            
+            foreach(var orderItem in orderList)
+            {
+                var intValue = Int32.Parse(orderItem);
+
+                if (currentOrderItem != null && currentOrderItem.VerseNumber == intValue)
+                {
+                    currentOrderItem.RepeatCount++;
+                }
+                else
+                {
+                    currentOrderItem = new OrderItem
+                    {
+                        VerseNumber = intValue,
+                        RepeatCount = 0
+                    };
+
+                    _order.Add(currentOrderItem);
+                }
+            }
         }
 
         public void SetVerse(int? overrideCurrentIndex = null)
@@ -112,7 +190,14 @@ namespace Overheads.Core
                     _currentVerseIndex = overrideCurrentIndex.Value;
                 }
 
-                CurrentVerse = Verses.ElementAt(_currentVerseIndex);
+                var orderItem = _order.ElementAt(_currentVerseIndex);
+
+                CurrentVerse = Verses.FirstOrDefault(x => x.VerseNumber == orderItem.VerseNumber);
+
+                if (orderItem.RepeatCount > 0)
+                {
+                    CurrentVerse.AddRepeatLine(orderItem.RepeatCount);
+                }
                 
                 if(_showCords)
                 {
@@ -125,9 +210,9 @@ namespace Overheads.Core
 
                 SetFirstLineOfNextVerse();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                CurrentVerse = new Verse();
+                CurrentVerse = new Verse("", true, 0);
                 CurrentVerse.SetupErrorVerse();
             }
             
@@ -135,18 +220,22 @@ namespace Overheads.Core
 
         private void SetFirstLineOfNextVerse()
         {
-            var nextVerse = Verses.ElementAtOrDefault(_currentVerseIndex + 1);
+            var orderItem = _order.ElementAtOrDefault(_currentVerseIndex + 1);
 
-            if (nextVerse != null)
+            if(orderItem != null)
             {
-                var nextLine =  nextVerse.FirstLine;
+                
+
+                var nextVerse = Verses.FirstOrDefault(x => x.VerseNumber == orderItem.VerseNumber);
+
+                var nextLine = nextVerse.FirstLine;
 
                 FirstLineOfNextVerse = nextLine.Text + "...";
             }
             else
             {
                 FirstLineOfNextVerse = "";
-            }  
+            }
         }
 
         public void PreviousVerse()
@@ -161,7 +250,7 @@ namespace Overheads.Core
 
         public void NextVerse()
         {
-            if (_currentVerseIndex < Verses.Count() - 1)
+            if (_currentVerseIndex < _order.Count() - 1)
             {
                 _currentVerseIndex++;
             }

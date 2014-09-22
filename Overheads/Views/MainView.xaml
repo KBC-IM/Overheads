@@ -13,13 +13,13 @@
         <DataTemplate x:Key="VerseTemplate">
             <Grid Background="{Binding Tag.ScreenSettings.BackgroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Focusable="False">
                 <TextBlock Text="{Binding Text}" 
-                           Visibility="{Binding IsChords, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter} }"
+                           Visibility="{Binding IsNotText, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter} }"
                            Foreground="{Binding Tag.ScreenSettings.ForegroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                            FontSize="20" 
                            TextAlignment="Center"></TextBlock>
                 
                 <TextBlock Text="{Binding Text}" 
-                           Visibility="{Binding IsChords, Converter={StaticResource BoolToVisibilityConverter} }"
+                           Visibility="{Binding IsNotText, Converter={StaticResource BoolToVisibilityConverter} }"
                            Foreground="{Binding Tag.ScreenSettings.SpecialColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                            FontSize="20" 
                            TextAlignment="Center"></TextBlock>
