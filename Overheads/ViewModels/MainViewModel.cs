@@ -211,8 +211,11 @@ namespace Overheads.ViewModels
                 case Key.Down:
                     NextSearchResult();
                     break;
-                case Key.F5:
-                    CurrentSong.Refresh();
+                case Key.F9:
+                    if (CurrentSong != null)
+                    {
+                        CurrentSong.Refresh();
+                    }
                     break;
                 case Key.Back:
                     if (SearchString.Length > 0)
@@ -224,7 +227,10 @@ namespace Overheads.ViewModels
                     ScreenSettings.InvertColors();
                     break;
                 case Key.OemPlus:
-                    CurrentSong.ToggleCords();
+                    if (CurrentSong != null)
+                    {
+                        CurrentSong.ToggleCords();
+                    }
                     break;
                 case Key.F1:
                     SetCurrentBook(1);
@@ -237,6 +243,12 @@ namespace Overheads.ViewModels
                     break;
                 case Key.F4:
                     SetCurrentBook(4);
+                    break;
+                case Key.F5:
+                    SetCurrentBook(5);
+                    break;
+                case Key.F6:
+                    SetCurrentBook(6);
                     break;
 
                 case Key.LeftShift:
