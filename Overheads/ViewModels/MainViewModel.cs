@@ -218,7 +218,7 @@ namespace Overheads.ViewModels
                     }
                     break;
                 case Key.Back:
-                    if (SearchString.Length > 0)
+                    if (SearchString != null && SearchString.Length > 0)
                     {
                         SearchString = SearchString.Substring(0, SearchString.Length - 1);    
                     }
@@ -277,6 +277,9 @@ namespace Overheads.ViewModels
                 else
                 {
                     CurrentBook = potentialBook;
+                    SelectedSearchSong = new SearchSong();
+                    SelectedSearchSong.Book = CurrentBook.Title;
+                    Console.WriteLine(SelectedSearchSong.BookNumberAndTitle);
                 }
             } 
         }
