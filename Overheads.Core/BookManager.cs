@@ -41,7 +41,7 @@ namespace Overheads.Core
                 if (fileName != null && fileName.Length >= 6)
                 {
                     song.Book = fileName.Substring(0, 3);
-                    song.Number = fileName.Substring(3, 3);
+                    song.Number = fileName.Substring(3, 3).TrimStart(new char[] { '0' });
                 }
 
                 var stream = File.OpenRead(s);

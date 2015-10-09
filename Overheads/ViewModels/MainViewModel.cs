@@ -202,6 +202,8 @@ namespace Overheads.ViewModels
                         CurrentSong = null;
                     }
                     break;
+                case Key.System:
+                    break;
                 case Key.Enter:
                     SetSong(SelectedSearchSong);
                     break;
@@ -253,6 +255,10 @@ namespace Overheads.ViewModels
 
                 case Key.LeftShift:
                 case Key.RightShift:
+                case Key.LeftAlt:
+                case Key.RightAlt:
+                case Key.LeftCtrl:
+                case Key.RightCtrl:
                 case Key.Tab:
                     //dont do anything for these keys
                     break;
