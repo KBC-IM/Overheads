@@ -5,16 +5,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:helpers="clr-namespace:Overheads.Helpers"
         xmlns:myns="clr-namespace:Overheads"
-        WindowState="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, FallbackValue=Normal}"
-        WindowStyle="{Binding Style, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, FallbackValue=SingleBorderWindow}"
-        ResizeMode="{Binding Mode, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, FallbackValue=CanResize}"
-        Background="Black">
+        Background="Black" Loaded="Shell_Loaded" Closing="Shell_Closing" SourceInitialized="Shell_SourceInitialized" KeyDown="Shell_KeyDown">
 
     <Window.Resources>
         <myns:ShellViewModel x:Key="ShellViewResource" />
     </Window.Resources>
 
-    <Grid Background="White" x:Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];">
+    <Grid Background="White" x:Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];" KeyDown="MainGrid_KeyDown">
         <ContentControl x:Name="ActiveItem" /> 
     </Grid>
 

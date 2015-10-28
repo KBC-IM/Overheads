@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace Overheads.Core
 {
@@ -13,6 +14,7 @@ namespace Overheads.Core
         private string _title;
         private string _bookNumber;
         private List<Verse> _verses;
+        private string _chords;
         private Verse _currentVerse;
         private bool _showCords;
         private string _songText;
@@ -49,6 +51,17 @@ namespace Overheads.Core
                 if (Equals(value, _verses)) return;
                 _verses = value;
                 OnPropertyChanged("Verses");
+            }
+        }
+
+        public string Chords
+        {
+            get { return _chords; }
+            set
+            {
+                if (Equals(value, _chords)) return;
+                _chords = value;
+                OnPropertyChanged("Chords");
             }
         }
 
@@ -116,6 +129,7 @@ namespace Overheads.Core
                 }).ToList();
             }
 
+            SetChords();
             SetVerse();
         }
 
@@ -127,7 +141,6 @@ namespace Overheads.Core
 
         private void ProcessHeader(string header)
         {
-            Console.WriteLine(header);
             var headerParts = header.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             
             if(headerParts.Count() == 1)
@@ -139,7 +152,7 @@ namespace Overheads.Core
                 foreach(var part in headerParts)
                 {
                     var keyValue = part.Split(':');
-                    if(keyValue[0].ToLower() == "title")
+                    if (keyValue[0].ToLower() == "title")
                     {
                         Title = keyValue[1];
                     }
@@ -150,6 +163,10 @@ namespace Overheads.Core
                     else if (keyValue[0].ToLower() == "language")
                     {
                         _language = keyValue[1];
+                    }
+                    else
+                    {
+                        Title = part;
                     }
                 }
             }
@@ -221,7 +238,7 @@ namespace Overheads.Core
 
                 SetFirstLineOfNextVerse();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CurrentVerse = new Verse("", true, 0);
                 CurrentVerse.SetupErrorVerse();
@@ -246,6 +263,32 @@ namespace Overheads.Core
             else
             {
                 FirstLineOfNextVerse = "";
+            }
+        }
+
+        private void SetChords()
+        {
+            Chords = "";
+            foreach (Verse verse in Verses)
+            {
+                foreach (Line line in verse.AllLines)
+                {
+                    if (line.IsNotText)
+                        Chords += line.Text;
+                }
+            }
+            RegexOptions options = RegexOptions.None;
+            Regex regex = new Regex(@"[ ]{2,}", options);
+            Chords = regex.Replace(Chords, @" ");
+
+            string[] chords = Chords.Split(new Char[] { ' ', '/', '-'});
+            chords = chords.Distinct().ToArray();
+
+            Chords = "";
+
+            foreach(string chord in chords)
+            {
+                Chords += chord + " ";
             }
         }
 

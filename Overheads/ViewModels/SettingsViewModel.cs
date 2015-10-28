@@ -12,17 +12,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Caliburn.Micro;
+using Overheads.Core;
 
-namespace Overheads.Views
+namespace Overheads.ViewModels
 {
-    /// <summary>
-    /// Interaction logic for EditView.xaml
-    /// </summary>
-    public partial class EditView : UserControl
+    public class SettingsViewModel : Screen
     {
-        public EditView()
-        {
-            InitializeComponent();
-        }
+
     }
 }

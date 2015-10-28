@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using Caliburn.Micro;
 using Overheads.Core;
@@ -11,43 +12,14 @@ namespace Overheads {
     {
         public MainViewModel Main { get; set; }
         public EditViewModel Edit { get; set; }
-
-        private WindowState _state = WindowState.Normal;
-        private WindowStyle _style = WindowStyle.SingleBorderWindow;
-        private bool _fullscreen;
-
-        public WindowState State
-        {
-            get
-            {
-                return _state;
-            }
-            set
-            {
-                if (Equals(value, _state)) return;
-                _state = value;
-                NotifyOfPropertyChange(() => State);
-            }
-        }
-        public WindowStyle Style
-        {
-            get
-            {
-                return _style;
-            }
-            set
-            {
-                if (Equals(value, _style)) return;
-                _style = value;
-                NotifyOfPropertyChange(() => Style);
-            }
-        }
+        public SettingsViewModel Setting { get; set; }
 
         public ShellViewModel()
         {
             DisplayName = "Overheads";
             Main = new MainViewModel();
             Edit = new EditViewModel();
+            Setting = new SettingsViewModel();
         }
         protected override void OnActivate()
         {
@@ -71,30 +43,13 @@ namespace Overheads {
                 default:
                     if (ActiveItem is MainViewModel)
                     {
-                        Main.OnKeyPress(e);   
+                        Main.OnKeyPress(e);
                     }
                     break;
             }
-            if (Keyboard.IsKeyDown(Key.RightAlt) && Keyboard.IsKeyDown(Key.Enter))
-            {
-                ToggleFullscreen();
-            }
-        }
-
-        public void ToggleFullscreen()
-        {
-            _fullscreen = !_fullscreen;
-            if (_fullscreen)
-            {
-                State = WindowState.Maximized;
-                Style = WindowStyle.None;
-            }
-            else
-            {
-                State = WindowState.Normal;
-                Style = WindowStyle.SingleBorderWindow;
-            }
-            ActivateItem(Main);
+          
+            if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.S))
+                GoIntoSettings();
         }
 
         public void GoIntoEditMode()
@@ -105,10 +60,7 @@ namespace Overheads {
                 {
                     Edit.CurrentSong = Main.CurrentSong;
                     ActivateItem(Edit);
-                }
-                else
-                {
-                    //create a new file and save it
+                    Console.WriteLine(Main.CurrentSong.Key);
                 }
             }
             else
@@ -118,6 +70,19 @@ namespace Overheads {
                 Main.CurrentSong = BookManager.LoadSong(Edit.CurrentSong.Key);
                 HackTheFocus();
             } 
+        }
+
+        public void GoIntoSettings()
+        {
+            if(ActiveItem is MainViewModel)
+            {
+                ActivateItem(Setting);
+            }
+            else
+            {
+                ActivateItem(Main);
+                HackTheFocus();
+            }
         }
 
         public void HackTheFocus()

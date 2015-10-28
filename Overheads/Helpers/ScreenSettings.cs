@@ -89,7 +89,7 @@ namespace Overheads.Helpers
             ForegroundColor = new SolidColorBrush(Colors.Black); 
             TitleColor = new SolidColorBrush(Colors.DarkGoldenrod);
             SearchTextColor = new SolidColorBrush(Colors.DarkSlateGray);
-            SpecialColor = new SolidColorBrush(Colors.Purple);
+            SpecialColor = new SolidColorBrush(Color.FromRgb(255,153,255));
         }
 
         private void SetDarkTheme()
@@ -98,7 +98,7 @@ namespace Overheads.Helpers
             ForegroundColor = new SolidColorBrush(Colors.WhiteSmoke); 
             TitleColor = new SolidColorBrush(Colors.Gold);
             SearchTextColor = new SolidColorBrush(Colors.Cyan);
-            SpecialColor = new SolidColorBrush(Colors.MediumPurple);
+            SpecialColor = new SolidColorBrush(Color.FromRgb(255, 153, 255));
         }
     }
 }

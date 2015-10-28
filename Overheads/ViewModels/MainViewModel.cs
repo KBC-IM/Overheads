@@ -7,6 +7,7 @@ using Overheads.Helpers;
 using Application = System.Windows.Application;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Screen = Caliburn.Micro.Screen;
+using Overheads.Properties;
 
 namespace Overheads.ViewModels
 {
@@ -19,10 +20,21 @@ namespace Overheads.ViewModels
         private SearchSong _selectedSearchSong;
         private ScreenSettings _screenSettings;
         private Book _currentBook;
+        private double _fontSize;
 
         public bool IsSearching
         {
             get { return string.IsNullOrEmpty(SearchString) == false; }
+        }
+
+        public bool SearchResult
+        {
+            get {
+                if (SearchResults != null && SearchResults.Any())
+                    return true;
+                else
+                    return false;
+            } 
         }
 
         public int CurrentSearchIndex
@@ -35,6 +47,20 @@ namespace Overheads.ViewModels
                 }
 
                 return 0;
+            }
+        }
+
+        public double FontSize
+        {
+            get
+            {
+                return _fontSize;
+            }
+            set
+            {
+                if (Equals(value, _fontSize)) return;
+                _fontSize = value;
+                NotifyOfPropertyChange(() => FontSize);
             }
         }
 
@@ -102,9 +128,7 @@ namespace Overheads.ViewModels
             get
             {
                 if (SearchResults != null)
-                {
                     return SearchResults.Count();
-                }
 
                 return null;
             }
@@ -125,13 +149,16 @@ namespace Overheads.ViewModels
         public MainViewModel()
         {
             ScreenSettings = new ScreenSettings();
+
+            FontSize = System.Windows.SystemParameters.PrimaryScreenHeight / 5;
         }
 
         protected override void OnActivate()
         {
             try
             {
-                BookManager.Initialize();
+                if(BookManager.Books == null)
+                    BookManager.Initialize();
             }
             catch (Exception)
             {
@@ -148,7 +175,6 @@ namespace Overheads.ViewModels
                 SelectedSearchSong = null;
                 return;
             }
-
             var bookKey = CurrentBook != null ? CurrentBook.Key : null;
 
             var sr = BookManager.SearchSongs(SearchString, bookKey);
@@ -163,10 +189,30 @@ namespace Overheads.ViewModels
 
         public void SetSong(SearchSong song)
         {
-            if (song == null)
+            if(song == null)
             {
+                int x;
+                if (IsSearching && SearchString.Length <= 3 && SearchString.All(Char.IsDigit) && int.TryParse(SearchString, out x) && x > 0)
+                {
+                    string fmt = "000";
+                    string songNumber = x.ToString(fmt);
+                    string bookKey;
+                    string bookTitle;
+                    if (CurrentBook != null)
+                    {
+                        bookKey = CurrentBook.Key;
+                        bookTitle = CurrentBook.Title;
+                    }
+                    else
+                    {
+                        bookKey = BookManager.Books[0].Key;
+                        bookTitle = BookManager.Books[0].Title;
+                    }
+
+                    CurrentSong = new Song("No Song At This Index" + Environment.NewLine + "=" + Environment.NewLine + "You can press the edit key to create a new song", bookKey + "/" + bookTitle + songNumber + ".TXT");
+                }
                 return;
-            } 
+            }
 
             CurrentSong = BookManager.LoadSong(song.Key);
             CurrentSong.BookNumber = song.BookNumber;
@@ -182,25 +228,17 @@ namespace Overheads.ViewModels
             {
                 case Key.Left:
                     if (CurrentSong != null)
-                    {
                         CurrentSong.PreviousVerse();
-                    }
                     break;
                 case Key.Right:
                     if (CurrentSong != null)
-                    {
                         CurrentSong.NextVerse();
-                    }
                     break;
                 case Key.Space:
                     if (SearchString != null && SearchString.Length > 0)
-                    {
                         SearchString = SearchString + " ";
-                    }
                     else
-                    {
                         CurrentSong = null;
-                    }
                     break;
                 case Key.System:
                     break;
@@ -215,24 +253,19 @@ namespace Overheads.ViewModels
                     break;
                 case Key.F9:
                     if (CurrentSong != null)
-                    {
                         CurrentSong.Refresh();
-                    }
                     break;
                 case Key.Back:
                     if (SearchString != null && SearchString.Length > 0)
-                    {
                         SearchString = SearchString.Substring(0, SearchString.Length - 1);    
-                    }
                     break;
                 case Key.OemMinus:
-                    ScreenSettings.InvertColors();
+                    if(Settings.Default.ThemeShortcutEnabled)
+                        ScreenSettings.InvertColors();
                     break;
                 case Key.OemPlus:
                     if (CurrentSong != null)
-                    {
                         CurrentSong.ToggleCords();
-                    }
                     break;
                 case Key.F1:
                     SetCurrentBook(1);
@@ -277,9 +310,7 @@ namespace Overheads.ViewModels
                 var potentialBook = BookManager.Books[sequence - 1];
 
                 if (potentialBook == CurrentBook)
-                {
                     CurrentBook = null;
-                }
                 else
                 {
                     CurrentBook = potentialBook;
@@ -295,9 +326,7 @@ namespace Overheads.ViewModels
             if (SearchResults == null || !SearchResults.Any()) return;
 
             if (_currentSearchIndex < SearchResults.Count() - 1)
-            {
                 _currentSearchIndex++;
-            }
 
             SelectedSearchSong = SearchResults.ElementAt(_currentSearchIndex);
         }
@@ -307,9 +336,7 @@ namespace Overheads.ViewModels
             if (SearchResults == null || !SearchResults.Any()) return;
 
             if (_currentSearchIndex > 0)
-            {
                 _currentSearchIndex--;
-            }
 
             SelectedSearchSong = SearchResults.ElementAt(_currentSearchIndex);
         }

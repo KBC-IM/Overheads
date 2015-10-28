@@ -11,7 +11,7 @@ namespace Overheads.Core
 
         public string BookNumberAndTitle
         {
-            get { return string.Format("{0} {1} - {2}", Book, Number, Title); }
+            get { return string.Format("{0} {1} - {2} - ", Book, Number, Title); }
         }
 
         public string BookNumber
