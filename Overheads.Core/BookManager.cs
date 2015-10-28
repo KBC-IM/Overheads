@@ -28,7 +28,6 @@ namespace Overheads.Core
                     };
                 if (Settings.Default.BookOrder != null && Settings.Default.BookOrder.Contains(book.Title) && Books.Count > Settings.Default.BookOrder.IndexOf(book.Title))
                 {
-                    Console.WriteLine("Found Book");
                     Books.Insert(Settings.Default.BookOrder.IndexOf(book.Title), book);
                 }
                 else
@@ -44,7 +43,7 @@ namespace Overheads.Core
 
             foreach (var s in songsList)
             {
-                if (Path.GetExtension(s) == ".TXT")
+                if (Path.GetExtension(s).ToLower() == ".txt")
                 {
                     var song = new SearchSong();
                     song.Key = s;
