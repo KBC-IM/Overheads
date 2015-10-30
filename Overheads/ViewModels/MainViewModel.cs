@@ -20,11 +20,18 @@ namespace Overheads.ViewModels
         private SearchSong _selectedSearchSong;
         private ScreenSettings _screenSettings;
         private Book _currentBook;
-        private double _fontSize;
+
+        public ICommand MouseEnterCommand { get; private set; }
+        public ICommand MouseLeaveCommand { get; private set; }
 
         public bool IsSearching
         {
             get { return string.IsNullOrEmpty(SearchString) == false; }
+        }
+
+        public bool SubtitleAvailable
+        {
+            get { return string.IsNullOrEmpty(CurrentSong.Subtitle) == false;  }
         }
 
         public bool SearchResult
@@ -47,20 +54,6 @@ namespace Overheads.ViewModels
                 }
 
                 return 0;
-            }
-        }
-
-        public double FontSize
-        {
-            get
-            {
-                return _fontSize;
-            }
-            set
-            {
-                if (Equals(value, _fontSize)) return;
-                _fontSize = value;
-                NotifyOfPropertyChange(() => FontSize);
             }
         }
 
@@ -107,6 +100,7 @@ namespace Overheads.ViewModels
                 _selectedSearchSong = value;
                 NotifyOfPropertyChange(() => SelectedSearchSong);
                 NotifyOfPropertyChange(() => CurrentSearchIndex);
+                NotifyOfPropertyChange(() => SubtitleAvailable);
             }
         }
 
@@ -150,7 +144,10 @@ namespace Overheads.ViewModels
         {
             ScreenSettings = new ScreenSettings();
 
-            FontSize = System.Windows.SystemParameters.PrimaryScreenHeight / 5;
+            this.MouseEnterCommand = new DelegateCommand(this.MouseEnter);
+            this.MouseLeaveCommand = new DelegateCommand(this.MouseLeave);
+
+            CurrentSong = new Song("Romans 15:7" + Environment.NewLine + "=" + Environment.NewLine + "Therefore welcome one another" + Environment.NewLine + "as Christ has welcomed you," + Environment.NewLine + "for the glory of God.", "");
         }
 
         protected override void OnActivate()
@@ -301,6 +298,17 @@ namespace Overheads.ViewModels
             }
 
             e.Handled = true;
+        }
+
+        public void MouseEnter(object param)
+        {
+            if (Properties.Settings.Default.HideCursor)
+                Mouse.OverrideCursor = Cursors.None;
+        }
+
+        public void MouseLeave(object param)
+        {
+            Mouse.OverrideCursor = Cursors.Arrow;
         }
 
         public void SetCurrentBook(int sequence)

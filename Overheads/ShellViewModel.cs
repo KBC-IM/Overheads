@@ -1,11 +1,12 @@
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using Caliburn.Micro;
 using Overheads.Core;
 using Overheads.Helpers;
 using Overheads.ViewModels;
 using System.Windows.Input;
+using Overheads.Properties;
 
 namespace Overheads {
     public class ShellViewModel : Conductor<IScreen>, IShell
@@ -20,6 +21,20 @@ namespace Overheads {
             Main = new MainViewModel();
             Edit = new EditViewModel();
             Setting = new SettingsViewModel();
+
+            if (Settings.Default.UpgradeRequired)
+            {
+                Settings.Default.Upgrade();
+                Settings.Default.UpgradeRequired = false;
+                Settings.Default.Save();
+            }
+
+            if (Core.Properties.Settings.Default.UpgradeRequired)
+            {
+                Core.Properties.Settings.Default.Upgrade();
+                Core.Properties.Settings.Default.UpgradeRequired = false;
+                Core.Properties.Settings.Default.Save();
+            }
         }
         protected override void OnActivate()
         {
@@ -42,9 +57,7 @@ namespace Overheads {
                     break;
                 default:
                     if (ActiveItem is MainViewModel)
-                    {
                         Main.OnKeyPress(e);
-                    }
                     break;
             }
           
@@ -56,7 +69,7 @@ namespace Overheads {
         {
             if (ActiveItem is MainViewModel)
             {
-                if (Main.CurrentSong != null)
+                if (Main.CurrentSong != null && !string.IsNullOrEmpty(Main.CurrentSong.Key))
                 {
                     Edit.CurrentSong = Main.CurrentSong;
                     ActivateItem(Edit);
@@ -65,10 +78,22 @@ namespace Overheads {
             }
             else
             {
-                BookManager.SaveSong(Edit.CurrentSong);
-                ActivateItem(Main);
-                Main.CurrentSong = BookManager.LoadSong(Edit.CurrentSong.Key);
-                HackTheFocus();
+                System.Windows.MessageBoxButton buttons = MessageBoxButton.YesNoCancel;
+                System.Windows.MessageBoxResult dr = MessageBox.Show("Would you like to save changes to this song?", "Save Changes", buttons);
+
+                if (dr == System.Windows.MessageBoxResult.Yes)
+                {
+                    BookManager.SaveSong(Edit.CurrentSong);
+                    ActivateItem(Main);
+                    Main.CurrentSong = BookManager.LoadSong(Edit.CurrentSong.Key);
+                    HackTheFocus();
+                }
+                else if (dr == System.Windows.MessageBoxResult.No)
+                {
+                    ActivateItem(Main);
+                    Main.CurrentSong = BookManager.LoadSong(Edit.CurrentSong.Key);
+                    HackTheFocus();
+                }
             } 
         }
 
@@ -95,6 +120,39 @@ namespace Overheads {
             }
 
             view.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+        }
+
+        public static void OnSourceInitialized(object sender, EventArgs e)
+        {
+            Console.WriteLine("Source Initialized");
+            Window window = sender as Window;
+            if (Settings.Default.Fullscreen)
+            {
+                Console.WriteLine(Settings.Default.MaximizeToSecondary);
+                if (Settings.Default.MaximizeToSecondary)
+                    WindowExt.MaximizeToSecondary(window);
+                else
+                    WindowExt.MaximizeToPrimary(window);
+            }
+            else
+                window.SetPlacement(Settings.Default.MainWindowPlacement);
+        }
+
+        public static void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            Console.WriteLine("Closing");
+            Window window = sender as Window;
+            Settings.Default.MainWindowPlacement = window.GetPlacement();
+            Settings.Default.Save();
+            Core.Properties.Settings.Default.Save();
+        }
+
+        public static void OnKeyDown(object sender, EventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.RightAlt) && Keyboard.IsKeyDown(Key.Enter))
+            {
+                WindowExt.ToggleFullscreen(sender as Window);
+            }
         }
     }
 }

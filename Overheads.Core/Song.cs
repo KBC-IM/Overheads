@@ -12,6 +12,7 @@ namespace Overheads.Core
         private string _firstLineOfNextVerse;
         private int _currentVerseIndex;
         private string _title;
+        private string _subtitle;
         private string _bookNumber;
         private List<Verse> _verses;
         private string _chords;
@@ -40,6 +41,17 @@ namespace Overheads.Core
                 if (value == _title) return;
                 _title = value;
                 OnPropertyChanged("Title");
+            }
+        }
+
+        public string Subtitle
+        {
+            get { return _subtitle; }
+            set
+            {
+                if (value == _subtitle) return;
+                _subtitle = value;
+                OnPropertyChanged("Subtitle");
             }
         }
 
@@ -142,33 +154,36 @@ namespace Overheads.Core
         private void ProcessHeader(string header)
         {
             var headerParts = header.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            
-            if(headerParts.Count() == 1)
+
+            foreach (var part in headerParts)
             {
-                Title = headerParts.First();
-            }
-            else
-            {
-                foreach(var part in headerParts)
+
+                var keyValue = part.Split(new char[] { ':' }, 2);
+                if (keyValue[0].ToLower() == "title")
                 {
-                    var keyValue = part.Split(':');
-                    if (keyValue[0].ToLower() == "title")
-                    {
-                        Title = keyValue[1];
-                    }
-                    else if (keyValue[0].ToLower() == "order")
-                    {
-                        PreprocessOrder(keyValue[1]);
-                    }
-                    else if (keyValue[0].ToLower() == "language")
-                    {
-                        _language = keyValue[1];
-                    }
-                    else
-                    {
-                        Title = part;
-                    }
+                    Title = keyValue[1];
                 }
+                else if (keyValue[0].ToLower() == "order")
+                {
+                    PreprocessOrder(keyValue[1]);
+                }
+                else if (keyValue[0].ToLower() == "language")
+                {
+                    _language = keyValue[1];
+                }
+                else if (keyValue[0].ToLower() == "chords")
+                {
+
+                }
+                else if (keyValue[0].ToLower() == "subtitle")
+                {
+                    Subtitle = keyValue[1];
+                }
+                else
+                {
+                    Title = part;
+                }
+
             }
         }
 

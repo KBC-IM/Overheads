@@ -28,6 +28,11 @@ namespace Overheads.Core
             get { return Type == LineType.Chord || Type == LineType.Repeat; }
         }
 
+        public bool IsRepeat
+        {
+            get { return Type == LineType.Repeat || Type == LineType.Repeat; }
+        }
+
         public Line(string lineText, LineType? overrideLineType = null)
         {
             var trimmedLineText = lineText.TrimEnd();

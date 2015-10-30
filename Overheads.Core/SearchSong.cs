@@ -1,9 +1,9 @@
-﻿
-namespace Overheads.Core
+﻿namespace Overheads.Core
 {
     public class SearchSong
     {
         public string Title { get; set; }
+        public string Subtitle { get; set; }
         public string FirstLine { get; set; }
         public string Key { get; set; }
         public string Number { get; set; }

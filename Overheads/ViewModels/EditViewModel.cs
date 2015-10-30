@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Overheads.Core;
 
 namespace Overheads.ViewModels

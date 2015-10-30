@@ -3,24 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:p="clr-namespace:Overheads.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
-             d:DesignWidth="500"
-             Loaded="UserControl_Loaded">
-    <Grid Loaded="Grid_Loaded" KeyDown="Grid_KeyDown">
+             d:DesignWidth="500">
+    <Grid>
         <Label x:Name="lblBookOrder" Content="Book Order" HorizontalAlignment="Left" Margin="18,17,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.006,-0.036"/>
-        <ListBox x:Name="lbxBookOrder" HorizontalAlignment="Left" Height="183" Margin="18,48,0,0" VerticalAlignment="Top" Width="135" />
-        <Button x:Name="btnMoveUp" Content="^" HorizontalAlignment="Left" Margin="158,48,0,0" VerticalAlignment="Top" Width="20" Click="btnMoveUp_Click" Height="40"/>
-        <Button x:Name="btnMoveDown" Content="v" HorizontalAlignment="Left" Margin="158,191,0,0" VerticalAlignment="Top" Width="20" Click="btnMoveDown_Click" Height="40"/>
-        <CheckBox x:Name="cbxThemeShortcut" Content="Theme Shortcut Enabled" HorizontalAlignment="Left" Margin="209,54,0,0" VerticalAlignment="Top" Click="checkBox_Click"/>
-        <CheckBox x:Name="cbxFullScreen" Content="Maximize On Start" HorizontalAlignment="Left" Margin="209,97,0,0" VerticalAlignment="Top" Click="cbxFullScreen_Click"/>
-        <CheckBox x:Name="cbxMaximizeToSecondary" Content="Maximize To Secondary Monitor" HorizontalAlignment="Left" Margin="209,117,0,0" VerticalAlignment="Top" Click="cbxMaximizeToSecondary_Click"/>
+        <ListBox ItemsSource="{Binding BookNames}" SelectedIndex="{Binding Index}" SelectedItem="{Binding SelectedItem}" x:Name="lbxBookOrder" HorizontalAlignment="Left" Height="183" Margin="18,48,0,0" VerticalAlignment="Top" Width="135" />
+        <Button x:Name="btnMoveUp" Content="^" Command="{Binding MoveCommand}" CommandParameter="Up" HorizontalAlignment="Left" Margin="158,48,0,0" VerticalAlignment="Top" Width="20" Height="40"/>
+        <Button x:Name="btnMoveDown" Content="v" Command="{Binding MoveCommand}" CommandParameter="Down" HorizontalAlignment="Left" Margin="158,191,0,0" VerticalAlignment="Top" Width="20" Height="40"/>
+        <CheckBox x:Name="cbxThemeShortcut" Content="Theme Shortcut Enabled" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=ThemeShortcutEnabled, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,54,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbxFullScreen" Content="Maximize On Start" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=Fullscreen, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,97,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="cbxMaximizeToSecondary" Content="Maximize To Secondary Monitor" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=MaximizeToSecondary, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,117,0,0" VerticalAlignment="Top"/>
         <GroupBox x:Name="groupBox" Header="Window Settings" HorizontalAlignment="Left" Margin="193,74,0,0" VerticalAlignment="Top" Height="71" Width="227"/>
-        <CheckBox x:Name="cbxHideCursor" Content="Hide Cursor Over Songs" HorizontalAlignment="Left" Margin="209,160,0,0" VerticalAlignment="Top" Click="cbxHideCursor_Click"/>
-        <Border BorderThickness="1" BorderBrush="Black">
-            <TextBlock x:Name="tbxSongsDirectory" HorizontalAlignment="Left" Height="19" Margin="209,208,0,0" TextWrapping="Wrap" Text="..." VerticalAlignment="Top" Width="186" TextTrimming="CharacterEllipsis" Background="White"/>
+        <CheckBox x:Name="cbxHideCursor" Content="Hide Cursor Over Songs" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=HideCursor, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,160,0,0" VerticalAlignment="Top"/>
+        <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left" VerticalAlignment="Top" Height="19" Margin="209,210,0,0" Width="186">
+            <TextBlock x:Name="tbxSongsDirectory" HorizontalAlignment="Left" VerticalAlignment="Top" Height="19" Margin="209,210,0,0" TextWrapping="Wrap" Text="{Binding Path}" Width="186" TextTrimming="CharacterEllipsis" Background="White"/>
         </Border>
-        <Button x:Name="btnBrowse" Content="..." HorizontalAlignment="Left" Margin="400,207,0,0" VerticalAlignment="Top" Width="20" Click="btnBrowse_Click"/>
+        <Button x:Name="btnBrowse" Content="..." Command="{Binding BrowseCommand}" HorizontalAlignment="Left" Margin="400,210,0,0" VerticalAlignment="Top" Width="20"/>
         <Label x:Name="lblDirectory" Content="Books Directory" HorizontalAlignment="Left" Margin="209,182,0,0" VerticalAlignment="Top"/>
+        <Button Command="{Binding PrintCommand}" CommandParameter="{Binding BookManager.Books}" x:Name="btnPrintIndex" Content="Print Index" HorizontalAlignment="Left" Margin="18,270,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="btnPrintCurrentSong" Content="Print Current Song" HorizontalAlignment="Left" Margin="103,270,0,0" VerticalAlignment="Top" Width="110"/>
     </Grid>
 </UserControl>

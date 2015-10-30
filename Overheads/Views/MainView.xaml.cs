@@ -12,16 +12,5 @@ namespace Overheads.Views
         {
             InitializeComponent();
         }
-
-        private void MainGrid_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if(Properties.Settings.Default.HideCursor)
-                Mouse.OverrideCursor = Cursors.None;
-        }
-
-        private void MainGrid_MouseLeave(object sender, MouseEventArgs e)
-        {
-            Mouse.OverrideCursor = Cursors.Arrow;
-        }
     }
 }

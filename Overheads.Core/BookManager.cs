@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using Overheads.Core.Properties;
 
@@ -13,11 +14,13 @@ namespace Overheads.Core
 
         public static void Initialize()
         {
+            Cursor.Current = Cursors.WaitCursor;
             Books = new List<Book>();
             var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/books";
             if(Settings.Default.Path == "")
                 Settings.Default.Path = dir;
-            var bookDirList = Directory.GetDirectories(Settings.Default.Path);
+            Console.WriteLine(dir);
+            var bookDirList = Directory.GetDirectories(dir);
 
             foreach (var bookdir in bookDirList)
             {
@@ -33,7 +36,10 @@ namespace Overheads.Core
                 else
                     Books.Add(book);
                 LoadSongs(book.Key, book);
+
+                Console.WriteLine("Loaded Book");
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private static void LoadSongs(string path, Book book)
@@ -43,7 +49,7 @@ namespace Overheads.Core
 
             foreach (var s in songsList)
             {
-                if (Path.GetExtension(s).ToLower() == ".txt")
+                if (Path.GetExtension(s) == ".txt")
                 {
                     var song = new SearchSong();
                     song.Key = s;
@@ -58,18 +64,10 @@ namespace Overheads.Core
                     var sr = new StreamReader(stream);
 
                     song.Title = GetTitle(sr);
-                    sr.ReadLine(); //skip the = sign
-                    song.FirstLine = sr.ReadLine() ?? "";
-                    // If the first line has chords skip to the next line
 
-                    bool pastHeader = false;
-                    while (!pastHeader)
-                    {
-                        if (song.FirstLine.TrimEnd().EndsWith("%") || song.FirstLine.Contains("=") || song.FirstLine.Contains(":") || String.IsNullOrWhiteSpace(song.FirstLine))
-                            song.FirstLine = sr.ReadLine() ?? "";
-                        else
-                            pastHeader = true;
-                    }
+                    sr.ReadLine(); //skip the = sign
+
+                    song.FirstLine = GetFirstLine(sr);
 
                     sr.Close();
 
@@ -81,7 +79,7 @@ namespace Overheads.Core
         private static string GetTitle(StreamReader sr)
         {
             var potentialTitle = sr.ReadLine() ?? "";
-            var splitTitle = potentialTitle.Split(':');
+            var splitTitle = potentialTitle.Split(new char[] { ':' }, 2);
             
             if (splitTitle.Count() == 2)
             {
@@ -108,6 +106,46 @@ namespace Overheads.Core
             }
         }
 
+        private static string GetSubtitle(StreamReader sr)
+        {
+            var potentialTitle = sr.ReadLine() ?? "";
+            var splitTitle = potentialTitle.Split(new char[] { ':' }, 2);
+
+            if (splitTitle.Count() == 2)
+            {
+                var headerValue = splitTitle[0].ToLower();
+
+                //The : defines header values but a colon can also exist in the title
+                //So we need to check if we are getting header values or not
+                if (headerValue == HeaderValues.Subtitle)
+                {
+                    return splitTitle[1];
+                }
+                else if (HeaderValues.IsHeaderValue(headerValue))
+                {
+                    return GetSubtitle(sr);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static string GetFirstLine(StreamReader sr)
+        {
+            var potentialFirstLine = sr.ReadLine() ?? "";
+
+            if (potentialFirstLine.TrimEnd().EndsWith("%") || potentialFirstLine.Contains("=") || potentialFirstLine.Contains(":"))
+                return GetFirstLine(sr);
+            else
+                return potentialFirstLine;
+        }
+
         public static Song LoadSong(string key)
         {
             var stream = File.OpenRead(key);
@@ -115,7 +153,6 @@ namespace Overheads.Core
             
             var wholeSong = sr.ReadToEnd();
             var song = new Song(wholeSong, key);
-
             sr.Close();
 
             return song;

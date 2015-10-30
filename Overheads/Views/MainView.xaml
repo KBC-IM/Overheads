@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:helpers="clr-namespace:Overheads.Helpers"
              xmlns:local="clr-namespace:Overheads.ViewModels"
              mc:Ignorable="d" 
@@ -16,7 +17,7 @@
                 <TextBlock Text="{Binding Text}" 
                            Visibility="{Binding IsNotText, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter} }"
                            Foreground="{Binding Tag.ScreenSettings.ForegroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
-                           FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}}"
+                           FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=1.1}"
                            TextAlignment="Left"></TextBlock>
 
                 <TextBlock Text="{Binding Text}" 
@@ -27,16 +28,26 @@
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid Background="{Binding ScreenSettings.BackgroundColor}" Focusable="True" Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];" MouseEnter="MainGrid_MouseEnter" MouseLeave="MainGrid_MouseLeave">
+    <Grid Background="{Binding ScreenSettings.BackgroundColor}" Focusable="True" Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseEnter">
+                <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"></i:InvokeCommandAction>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseLeave">
+                <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"></i:InvokeCommandAction>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="9*"/>
                 <RowDefinition Height=".75*"/>
                 <RowDefinition Height=".75*"/>
             </Grid.RowDefinitions>
-            <TextBlock Name="Title" Grid.Row ="0" Text="{Binding CurrentSong.Title}" Foreground="{Binding ScreenSettings.TitleColor}" TextAlignment="Center" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}"></TextBlock>
-            <Viewbox Stretch="Uniform" StretchDirection="DownOnly" VerticalAlignment="Top" Grid.Row="1">
+            <TextBlock Name="Title" Grid.Row="0" Text="{Binding CurrentSong.Title}" Foreground="{Binding ScreenSettings.TitleColor}" TextAlignment="Center" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}"></TextBlock>
+            <TextBlock Name="Subtitle" Visibility="{Binding SubtitleAvailable, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Row="1" Text="{Binding CurrentSong.Subtitle}" Foreground="{Binding ScreenSettings.SearchTextColor}" TextAlignment="Center" FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=.58}" />
+            <Viewbox Stretch="Uniform" StretchDirection="DownOnly" VerticalAlignment="Top" Grid.Row="2" Margin="0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -47,7 +58,7 @@
                     <TextBlock Grid.Row ="2" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}}" TextAlignment="Left"></TextBlock>
                 </Grid>
             </Viewbox>
-            <Grid Grid.Row="2" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid Grid.Row="3" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -55,7 +66,7 @@
                 <TextBlock Grid.Column="0" Text="{Binding SelectedSearchSong.BookNumberAndTitle}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}" Background="{Binding ScreenSettings.BackgroundColor}" ></TextBlock>
                 <TextBlock Grid.Column="1" Text="{Binding SelectedSearchSong.FirstLine}" Foreground="{Binding ScreenSettings.SearchTextColor}" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}" Background="{Binding ScreenSettings.BackgroundColor}" ></TextBlock>
             </Grid>
-            <Grid Grid.Row="3" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid Grid.Row="4" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -69,7 +80,7 @@
                 <TextBlock Grid.Column="3" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}" Text=" of " Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Center"></TextBlock>
                 <TextBlock Grid.Column="4" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}" x:Name="SearchResultsCount" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Left"></TextBlock>
             </Grid>
-            <Grid Grid.Row="3" Visibility="{Binding IsSearching, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid Grid.Row="5" Visibility="{Binding IsSearching, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>

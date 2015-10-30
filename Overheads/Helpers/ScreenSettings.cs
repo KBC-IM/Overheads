@@ -10,6 +10,7 @@ namespace Overheads.Helpers
         private SolidColorBrush _backgroundColor;
         private SolidColorBrush _searchTextColor;
         private SolidColorBrush _specialColor;
+        private SolidColorBrush _subtitleColor;
 
         public SolidColorBrush SpecialColor
         {
@@ -66,6 +67,17 @@ namespace Overheads.Helpers
             }
         }
 
+        public SolidColorBrush SubtitleColor
+        {
+            get { return _subtitleColor; }
+            set
+            {
+                if (Equals(value, _subtitleColor)) return;
+                _subtitleColor = value;
+                NotifyOfPropertyChange(() => SubtitleColor);
+            }
+        }
+
         public ScreenSettings()
         {
             SetDarkTheme();
@@ -90,6 +102,7 @@ namespace Overheads.Helpers
             TitleColor = new SolidColorBrush(Colors.DarkGoldenrod);
             SearchTextColor = new SolidColorBrush(Colors.DarkSlateGray);
             SpecialColor = new SolidColorBrush(Color.FromRgb(255,153,255));
+            SubtitleColor = new SolidColorBrush(Colors.Aquamarine);
         }
 
         private void SetDarkTheme()
@@ -99,6 +112,7 @@ namespace Overheads.Helpers
             TitleColor = new SolidColorBrush(Colors.Gold);
             SearchTextColor = new SolidColorBrush(Colors.Cyan);
             SpecialColor = new SolidColorBrush(Color.FromRgb(255, 153, 255));
+            SubtitleColor = new SolidColorBrush(Colors.Aquamarine);
         }
     }
 }

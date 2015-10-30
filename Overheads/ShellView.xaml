@@ -2,16 +2,17 @@
         x:Name="Shell"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:helpers="clr-namespace:Overheads.Helpers"
         xmlns:myns="clr-namespace:Overheads"
-        Background="Black" Loaded="Shell_Loaded" Closing="Shell_Closing" SourceInitialized="Shell_SourceInitialized" KeyDown="Shell_KeyDown">
+        Background="Black" Icon="Overheads.ico">
 
     <Window.Resources>
         <myns:ShellViewModel x:Key="ShellViewResource" />
     </Window.Resources>
 
-    <Grid Background="White" x:Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];" KeyDown="MainGrid_KeyDown">
+    <Grid Background="White" x:Name="MainGrid" micro:Message.Attach="[Event KeyDown] = [Action PreviewKeyUp($eventArgs)];">
         <ContentControl x:Name="ActiveItem" /> 
     </Grid>
 
