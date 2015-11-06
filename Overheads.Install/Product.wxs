@@ -15,6 +15,9 @@
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
     
+    <Icon Id="Overheads.ico" SourceFile="..\Overheads\Overheads.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="Overheads.ico" />
+    
     <UIRef Id="WixUI_Minimal"/>
 	</Product>
   
@@ -40,6 +43,7 @@
             Description="Song Displayer"
             Directory="DesktopFolder"
             WorkingDirectory="INSTALLFOLDER"
+            Icon="Overheads.ico"
             Advertise="yes"/>
          </File>
 			 </Component>

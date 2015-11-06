@@ -12,6 +12,8 @@ namespace Overheads.Core
     {
         public static List<Book> Books { get; set; }
 
+        public static Song LastSong { get; set; }
+
         public static void Initialize()
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -20,7 +22,7 @@ namespace Overheads.Core
             if(Settings.Default.Path == "")
                 Settings.Default.Path = dir;
             Console.WriteLine(dir);
-            var bookDirList = Directory.GetDirectories(dir);
+            var bookDirList = Directory.GetDirectories(Settings.Default.Path);
 
             foreach (var bookdir in bookDirList)
             {
@@ -49,7 +51,7 @@ namespace Overheads.Core
 
             foreach (var s in songsList)
             {
-                if (Path.GetExtension(s) == ".txt")
+                if (Path.GetExtension(s).ToLower() == ".txt")
                 {
                     var song = new SearchSong();
                     song.Key = s;

@@ -50,20 +50,18 @@ namespace Overheads.Core
 
                 int lastLocation = trimmedLineText.LastIndexOf("%");
 
-                if(lastLocation >= 0)
-                    Text = trimmedLineText.Substring(0, lastLocation);
+                if (lastLocation > -1)
+                    trimmedLineText = trimmedLineText.Substring(0, lastLocation);
 
-                int count = 0;
-
-                for (int c = 0; c < Text.Length; c += 2)
+                Text = trimmedLineText;
+                
+                for(int c = 0; c < Text.Length; c++)
                 {
-                    if (Char.IsWhiteSpace(Text[c]) && c > 0 && !Char.IsWhiteSpace(Text[c-1]))
+                    if(Text[c] == ' ')
                     {
-                        count = 0;
+                        Text = Text.Insert(c, "  ");
+                        c+=2;
                     }
-                    Text = Text.Insert(c - count, " ");
-
-                    count += 1;
                 }
             }
             else

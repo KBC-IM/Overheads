@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:p="clr-namespace:Overheads.Properties"
+             xmlns:i="clr-namespace:Overheads.Core;assembly=Overheads.Core"
+             xmlns:m="clr-namespace:Overheads"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="500">
@@ -17,12 +19,12 @@
         <CheckBox x:Name="cbxMaximizeToSecondary" Content="Maximize To Secondary Monitor" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=MaximizeToSecondary, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,117,0,0" VerticalAlignment="Top"/>
         <GroupBox x:Name="groupBox" Header="Window Settings" HorizontalAlignment="Left" Margin="193,74,0,0" VerticalAlignment="Top" Height="71" Width="227"/>
         <CheckBox x:Name="cbxHideCursor" Content="Hide Cursor Over Songs" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=HideCursor, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,160,0,0" VerticalAlignment="Top"/>
-        <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left" VerticalAlignment="Top" Height="19" Margin="209,210,0,0" Width="186">
-            <TextBlock x:Name="tbxSongsDirectory" HorizontalAlignment="Left" VerticalAlignment="Top" Height="19" Margin="209,210,0,0" TextWrapping="Wrap" Text="{Binding Path}" Width="186" TextTrimming="CharacterEllipsis" Background="White"/>
+        <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Left" VerticalAlignment="Top" Height="22" Margin="209,209,0,0" Width="186">
+            <TextBlock x:Name="tbxSongsDirectory" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Margin="209,210,0,0" TextWrapping="Wrap" Text="{Binding BookPath, FallbackValue='...'}" Width="186" TextTrimming="CharacterEllipsis" Background="White" Foreground="Black" />
         </Border>
         <Button x:Name="btnBrowse" Content="..." Command="{Binding BrowseCommand}" HorizontalAlignment="Left" Margin="400,210,0,0" VerticalAlignment="Top" Width="20"/>
         <Label x:Name="lblDirectory" Content="Books Directory" HorizontalAlignment="Left" Margin="209,182,0,0" VerticalAlignment="Top"/>
-        <Button Command="{Binding PrintCommand}" CommandParameter="{Binding BookManager.Books}" x:Name="btnPrintIndex" Content="Print Index" HorizontalAlignment="Left" Margin="18,270,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="btnPrintCurrentSong" Content="Print Current Song" HorizontalAlignment="Left" Margin="103,270,0,0" VerticalAlignment="Top" Width="110"/>
+        <Button Command="{Binding PrintIndexCommand}" x:Name="btnPrintIndex" Content="Print Index" HorizontalAlignment="Left" Margin="18,270,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Command="{Binding PrintSongCommand}" x:Name="btnPrintCurrentSong" Content="Print Current Song" HorizontalAlignment="Left" Margin="103,270,0,0" VerticalAlignment="Top" Width="110"/>
     </Grid>
 </UserControl>

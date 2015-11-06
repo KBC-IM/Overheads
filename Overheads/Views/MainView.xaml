@@ -12,19 +12,25 @@
     <UserControl.Resources>
         <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <helpers:HeightToFontSizeConverter x:Key="HeightToFontSizeConverter"/>
+        <helpers:MarginConverter x:Key="MarginConverter"/>
         <DataTemplate x:Key="VerseTemplate">
-            <Grid Background="{Binding Tag.ScreenSettings.BackgroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Focusable="False">
+            <Grid Focusable="False">
                 <TextBlock Text="{Binding Text}" 
                            Visibility="{Binding IsNotText, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter} }"
                            Foreground="{Binding Tag.ScreenSettings.ForegroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                            FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=1.1}"
+                           FontFamily="Lucida Sans"
                            TextAlignment="Left"></TextBlock>
 
                 <TextBlock Text="{Binding Text}" 
                            Visibility="{Binding IsNotText, Converter={StaticResource BoolToVisibilityConverter} }"
                            Foreground="{Binding Tag.ScreenSettings.SpecialColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
-                           FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=.58}"
-                           TextAlignment="Left"></TextBlock>
+                           FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=.57}" 
+                           FontWeight="Bold"
+                           TextAlignment="Left"
+                           FontFamily="Lucida Sans"
+                           Margin="0,-10,0,-10"></TextBlock>
+
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
@@ -41,7 +47,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="9*"/>
+                <RowDefinition Height="10*"/>
                 <RowDefinition Height=".75*"/>
                 <RowDefinition Height=".75*"/>
             </Grid.RowDefinitions>
@@ -55,7 +61,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <ItemsControl Grid.Row ="0" Tag="{Binding}" ItemsSource="{Binding CurrentSong.CurrentVerse.DisplayLines}" ItemTemplate="{StaticResource VerseTemplate}" Width="Auto" HorizontalAlignment="Left" />
-                    <TextBlock Grid.Row ="2" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}}" TextAlignment="Left"></TextBlock>
+                    <TextBlock Grid.Row ="2" Visibility="{Binding NextLineAvailable, Converter={StaticResource BoolToVisibilityConverter}}" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=1.1}" TextAlignment="Left"></TextBlock>
                 </Grid>
             </Viewbox>
             <Grid Grid.Row="3" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -80,14 +86,14 @@
                 <TextBlock Grid.Column="3" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}" Text=" of " Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Center"></TextBlock>
                 <TextBlock Grid.Column="4" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}" x:Name="SearchResultsCount" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Left"></TextBlock>
             </Grid>
-            <Grid Grid.Row="5" Visibility="{Binding IsSearching, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid Grid.Row="4" Visibility="{Binding IsSearching, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="1" FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=.58}" Text="{Binding CurrentSong.Chords}" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SpecialColor}" HorizontalAlignment="Left"></TextBlock>
-                <TextBlock Grid.Column="2" FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}}" Text="{Binding CurrentSong.BookNumber}" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Left"></TextBlock>
+                <TextBlock Grid.Column="1" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}" Text="{Binding CurrentSong.Chords}" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="{Binding ScreenSettings.SpecialColor}" HorizontalAlignment="Left"></TextBlock>
+                <TextBlock Grid.Column="2" FontSize="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource HeightToFontSizeConverter}}" Text="{Binding CurrentSong.BookNumber}" Background="{Binding ScreenSettings.BackgroundColor}" Foreground="#FF8AECCD" HorizontalAlignment="Left"></TextBlock>
             </Grid>
         </Grid>
     </Grid>

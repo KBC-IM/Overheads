@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Overheads.Core;
-using Overheads.Helpers;
+using System.Windows;
+using System.Windows.Xps.Packaging;
+using System.IO;
+using System.Windows.Documents;
+using System.Windows.Markup;
+using System.Windows.Media;
 
 namespace Overheads.ViewModels
 {
@@ -30,7 +35,7 @@ namespace Overheads.ViewModels
             }
         }
 
-        public string Path
+        public string BookPath
         {
             get
             {
@@ -41,7 +46,7 @@ namespace Overheads.ViewModels
             {
                 if (Equals(value, _path)) return;
                 _path = value;
-                NotifyOfPropertyChange(() => Path);
+                NotifyOfPropertyChange(() => BookPath);
             }
         }
 
@@ -82,12 +87,14 @@ namespace Overheads.ViewModels
 
         public SettingsViewModel()
         {
-            this.PrintCommand = new DelegateCommand(this.PrintGrid);
+            this.PrintIndexCommand = new DelegateCommand(this.PrintIndex);
+            this.PrintSongCommand = new DelegateCommand(this.PrintSong);
             this.BrowseCommand = new DelegateCommand(this.BrowseToDirectory);
             this.MoveCommand = new DelegateCommand(this.MoveBook);
         }
 
-        public ICommand PrintCommand { get; private set; }
+        public ICommand PrintIndexCommand { get; private set; }
+        public ICommand PrintSongCommand { get; private set; }
         public ICommand BrowseCommand { get; private set; }
         public ICommand MoveCommand { get; private set; }
 
@@ -101,18 +108,52 @@ namespace Overheads.ViewModels
             Core.Properties.Settings.Default.BookOrder = BookNames;
         }
 
-        public void PrintGrid(object param)
+        public void PrintIndex(object param)
         {
-            PrintDialog printDialog = new PrintDialog();
+            PrintDoc(PrintableDocuments.IndexDocument(BookManager.Books), "Overheads Index");
+        }
 
-            if (printDialog.ShowDialog() == false)
-                return;
+        public void PrintSong(object param)
+        {
+            if(BookManager.LastSong == null)
+            {
+                MessageBox.Show("A song is not selected.", "No Song Selected", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            else
+            {
+                PrintDoc(PrintableDocuments.SongDocument(BookManager.LastSong), BookManager.LastSong.Title, true);
+            }
+        }
 
-            string documentTitle = "Test Document";
-            Size pageSize = new Size(printDialog.PrintableAreaWidth, printDialog.PrintableAreaHeight);
+        public void PrintDoc(FlowDocument doc, string title, bool spanWidth = false)
+        {
+            PrintDialog printDlg = new PrintDialog();
 
-            CustomDocumentPaginator paginator = new CustomDocumentPaginator(param as DataGrid, documentTitle, pageSize, new Thickness(30, 20, 30, 20));
-            printDialog.PrintDocument(paginator, "Grid");
+            System.Printing.PrintDocumentImageableArea ia = null;
+            System.Windows.Xps.XpsDocumentWriter docWriter = System.Printing.PrintQueue.CreateXpsDocumentWriter(ref ia);
+
+            if (docWriter != null && ia != null)
+            {
+                DocumentPaginator paginator = ((IDocumentPaginatorSource)doc).DocumentPaginator;
+
+                paginator.PageSize = new Size(ia.MediaSizeWidth, ia.MediaSizeHeight);
+                doc.PageHeight = printDlg.PrintableAreaHeight;
+                doc.PageWidth = printDlg.PrintableAreaWidth;
+                Thickness t = new Thickness(72);
+                doc.PagePadding = new Thickness(
+                    Math.Max(ia.OriginWidth, t.Left),
+                    Math.Max(ia.OriginHeight, t.Top),
+                    Math.Max(ia.MediaSizeWidth - (ia.OriginWidth + ia.ExtentWidth), t.Right),
+                    Math.Max(ia.MediaSizeHeight - (ia.OriginHeight + ia.ExtentHeight), t.Bottom));
+                if(spanWidth)
+                    doc.ColumnWidth = double.PositiveInfinity;
+
+                docWriter.Write(paginator);
+            }
+            else
+            {
+                MessageBox.Show("No data is available to print.", "No Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         public void BrowseToDirectory(object param)
@@ -122,8 +163,8 @@ namespace Overheads.ViewModels
 
             if (result == System.Windows.Forms.DialogResult.OK && Core.Properties.Settings.Default.Path != dlg.SelectedPath)
             {
-                Path = dlg.SelectedPath;
-                Core.Properties.Settings.Default.Path = Path;
+                BookPath = dlg.SelectedPath;
+                Core.Properties.Settings.Default.Path = BookPath;
                 BookManager.Initialize();
                 LoadNames();
             }

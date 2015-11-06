@@ -34,6 +34,11 @@ namespace Overheads.ViewModels
             get { return string.IsNullOrEmpty(CurrentSong.Subtitle) == false;  }
         }
 
+        public bool NextLineAvailable
+        {
+            get { return string.IsNullOrEmpty(CurrentSong.FirstLineOfNextVerse) == false; }
+        }
+
         public bool SearchResult
         {
             get {
@@ -75,6 +80,7 @@ namespace Overheads.ViewModels
             {
                 if (Equals(value, _currentSong)) return;
                 _currentSong = value;
+                BookManager.LastSong = value;
                 
                 NotifyOfPropertyChange(() => CurrentSong);
             }
@@ -101,6 +107,7 @@ namespace Overheads.ViewModels
                 NotifyOfPropertyChange(() => SelectedSearchSong);
                 NotifyOfPropertyChange(() => CurrentSearchIndex);
                 NotifyOfPropertyChange(() => SubtitleAvailable);
+                NotifyOfPropertyChange(() => NextLineAvailable);
             }
         }
 
