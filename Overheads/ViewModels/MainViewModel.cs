@@ -36,7 +36,12 @@ namespace Overheads.ViewModels
 
         public bool NextLineAvailable
         {
-            get { return string.IsNullOrEmpty(CurrentSong.FirstLineOfNextVerse) == false; }
+            get {
+                if(CurrentSong.FirstLineOfNextVerse.Count > 1)
+                    return string.IsNullOrEmpty(CurrentSong.FirstLineOfNextVerse[1].Text) == false;
+                else
+                    return string.IsNullOrEmpty(CurrentSong.FirstLineOfNextVerse[0].Text) == false;
+            }
         }
 
         public bool SearchResult
@@ -248,6 +253,8 @@ namespace Overheads.ViewModels
                     break;
                 case Key.Enter:
                     SetSong(SelectedSearchSong);
+                    if (Settings.Default.DisplayChords)
+                        CurrentSong.ToggleCords();
                     break;
                 case Key.Up:
                     PreviousSearchResult();
@@ -268,7 +275,8 @@ namespace Overheads.ViewModels
                         ScreenSettings.InvertColors();
                     break;
                 case Key.OemPlus:
-                    if (CurrentSong != null)
+                    Settings.Default.DisplayChords = !Settings.Default.DisplayChords;
+                    if (CurrentSong != null && CurrentSong.ChordsVisible != Settings.Default.DisplayChords)
                         CurrentSong.ToggleCords();
                     break;
                 case Key.F1:

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
 using Overheads.Core;
@@ -60,9 +61,11 @@ namespace Overheads {
                         Main.OnKeyPress(e);
                     break;
             }
-          
+
             if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.S))
                 GoIntoSettings();
+            else if (Keyboard.IsKeyDown(Key.RightAlt) && Keyboard.IsKeyDown(Key.Enter))
+                WindowExt.ToggleFullscreen(Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive));
         }
 
         public void GoIntoEditMode()
@@ -71,30 +74,32 @@ namespace Overheads {
             {
                 if (Main.CurrentSong != null && !string.IsNullOrEmpty(Main.CurrentSong.Key))
                 {
-                    Edit.CurrentSong = Main.CurrentSong;
+                    Edit.CurrentSong = new Song(Main.CurrentSong.SongText, Main.CurrentSong.Key);
                     ActivateItem(Edit);
-                    Console.WriteLine(Main.CurrentSong.Key);
                 }
             }
-            else
+            else if (!String.Equals(Edit.CurrentSong.SongText, Main.CurrentSong.SongText))
             {
-                System.Windows.MessageBoxButton buttons = MessageBoxButton.YesNoCancel;
-                System.Windows.MessageBoxResult dr = MessageBox.Show("Would you like to save changes to this song?", "Save Changes", buttons);
+                MessageBoxButton buttons = MessageBoxButton.YesNoCancel;
+                MessageBoxResult dr = MessageBox.Show("Would you like to save changes to this song?", "Save Changes", buttons);
 
-                if (dr == System.Windows.MessageBoxResult.Yes)
+                if (dr == MessageBoxResult.Yes)
                 {
                     BookManager.SaveSong(Edit.CurrentSong);
-                    ActivateItem(Main);
-                    Main.CurrentSong = BookManager.LoadSong(Edit.CurrentSong.Key);
-                    HackTheFocus();
+                    GoBackToMain();
                 }
-                else if (dr == System.Windows.MessageBoxResult.No)
-                {
-                    ActivateItem(Main);
-                    Main.CurrentSong = BookManager.LoadSong(Edit.CurrentSong.Key);
-                    HackTheFocus();
-                }
-            } 
+                else if (dr == MessageBoxResult.No)
+                    GoBackToMain();
+            }
+            else
+                GoBackToMain();
+        }
+
+        public void GoBackToMain()
+        {
+            ActivateItem(Main);
+            Main.CurrentSong = BookManager.LoadSong(Edit.CurrentSong.Key);
+            HackTheFocus();
         }
 
         public void GoIntoSettings()

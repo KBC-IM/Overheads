@@ -187,6 +187,7 @@ namespace Overheads.Core
 
         public static IEnumerable<SearchSong> SearchSongs(string searchString, string bookKey = null)
         {
+            searchString = searchString.Replace("psalms", "psalm");
             if (string.IsNullOrEmpty(searchString))
             {
                 return null;

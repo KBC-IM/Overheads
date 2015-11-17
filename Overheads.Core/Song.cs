@@ -9,7 +9,7 @@ namespace Overheads.Core
 {
     public class Song : NotifyBase
     {
-        private string _firstLineOfNextVerse;
+        private List<Line> _firstLineOfNextVerse;
         private int _currentVerseIndex;
         private string _title;
         private string _subtitle;
@@ -88,7 +88,7 @@ namespace Overheads.Core
             }
         }
 
-        public string FirstLineOfNextVerse 
+        public List<Line> FirstLineOfNextVerse 
         {
             get { return _firstLineOfNextVerse; }
             set
@@ -109,6 +109,8 @@ namespace Overheads.Core
                 OnPropertyChanged("SongText");
             }
         }
+
+        public bool ChordsVisible { get { return _showCords; } }
 
         public string Key { get; set; }
 
@@ -258,27 +260,28 @@ namespace Overheads.Core
                 CurrentVerse = new Verse("", true, 0);
                 CurrentVerse.SetupErrorVerse();
             }
-            
         }
 
         private void SetFirstLineOfNextVerse()
         {
             var orderItem = _order.ElementAtOrDefault(_currentVerseIndex + 1);
+            
+            List<Line> nextLines = new List<Line> ();
 
-            if(orderItem != null)
+            if (orderItem != null)
             {
-                
-
                 var nextVerse = Verses.FirstOrDefault(x => x.VerseNumber == orderItem.VerseNumber);
 
                 var nextLine = nextVerse.FirstLine;
 
-                FirstLineOfNextVerse = nextLine.Text + "...";
+                if (ChordsVisible)
+                    nextLines.Add(new Line(nextVerse.FirstLineChords.Text, LineType.Chord));
+                nextLines.Add(new Line(nextVerse.FirstLine.Text + "...", LineType.Text));
             }
             else
-            {
-                FirstLineOfNextVerse = "";
-            }
+                nextLines = new List<Line>(new Line[] { new Line(""), new Line("") });
+
+            FirstLineOfNextVerse = nextLines;
         }
 
         private void SetChords()
@@ -289,14 +292,14 @@ namespace Overheads.Core
                 foreach (Line line in verse.AllLines)
                 {
                     if (line.IsNotText)
-                        Chords += line.Text;
+                        Chords += line.Text + " ";
                 }
             }
             RegexOptions options = RegexOptions.None;
             Regex regex = new Regex(@"[ ]{2,}", options);
             Chords = regex.Replace(Chords, @" ");
 
-            string[] chords = Chords.Split(new Char[] { ' ', '/', '-'});
+            string[] chords = Chords.Split(new string[] { " ", "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             chords = chords.Distinct().ToArray();
 
             Chords = "";

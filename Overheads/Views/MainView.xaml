@@ -57,11 +57,11 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}}"/>
+                        <RowDefinition Height="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=1.1}"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <ItemsControl Grid.Row ="0" Tag="{Binding}" ItemsSource="{Binding CurrentSong.CurrentVerse.DisplayLines}" ItemTemplate="{StaticResource VerseTemplate}" Width="Auto" HorizontalAlignment="Left" />
-                    <TextBlock Grid.Row ="2" Visibility="{Binding NextLineAvailable, Converter={StaticResource BoolToVisibilityConverter}}" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=1.1}" TextAlignment="Left"></TextBlock>
+                    <ItemsControl Visibility="{Binding NextLineAvailable, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Row ="2" Tag="{Binding}" ItemsSource="{Binding CurrentSong.FirstLineOfNextVerse}" ItemTemplate="{StaticResource VerseTemplate}" Width="Auto" HorizontalAlignment="Left" />
                 </Grid>
             </Viewbox>
             <Grid Grid.Row="3" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">

@@ -118,5 +118,29 @@ namespace Overheads.Properties {
                 this["HideCursor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisplayChords {
+            get {
+                return ((bool)(this["DisplayChords"]));
+            }
+            set {
+                this["DisplayChords"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoMinimize {
+            get {
+                return ((bool)(this["AutoMinimize"]));
+            }
+            set {
+                this["AutoMinimize"] = value;
+            }
+        }
     }
 }
