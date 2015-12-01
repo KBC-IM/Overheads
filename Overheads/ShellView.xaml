@@ -2,13 +2,11 @@
         x:Name="Shell"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:helpers="clr-namespace:Overheads.Helpers"
         xmlns:myns="clr-namespace:Overheads"
-        WindowState="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, FallbackValue=Normal}"
-        WindowStyle="{Binding Style, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, FallbackValue=SingleBorderWindow}"
-        ResizeMode="{Binding Mode, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, FallbackValue=CanResize}"
-        Background="Black">
+        Background="Black" Icon="Overheads.ico">
 
     <Window.Resources>
         <myns:ShellViewModel x:Key="ShellViewResource" />

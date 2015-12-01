@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Overheads
@@ -16,8 +15,11 @@ namespace Overheads
             //WPF does not have a focused Item when it first starts up. This puts focus on the first element.
             //This happens to be the main grid which has the key capture logic. Thus we are able to capture the keys.
             Loaded += (sender, e) =>
-                    MoveFocus(new TraversalRequest(FocusNavigationDirection.Next)); 
+                    MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
 
+            SourceInitialized += ShellViewModel.OnSourceInitialized;
+            Closing += ShellViewModel.OnWindowClosing;
+            KeyDown += ShellViewModel.OnKeyDown;
         }
     }
 }

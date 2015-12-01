@@ -35,6 +35,18 @@ namespace Overheads.Core
             }
         }
 
+        private Line _firstLineChords;
+        public Line FirstLineChords
+        {
+            get { return _firstLineChords; }
+            set
+            {
+                if (value == _firstLineChords) return;
+                _firstLineChords = value;
+                OnPropertyChanged("FirstLineChords");
+            }
+        }
+
         public Verse(string verseText, bool showChords, int verseNumber)
         {
             DisplayLines = new List<Line>();
@@ -55,8 +67,9 @@ namespace Overheads.Core
             else
             {
                 HideChords();
-            } 
+            }
 
+            FirstLineChords = AllLines.FirstOrDefault(x => x.Type == LineType.Chord);
             FirstLine = AllLines.FirstOrDefault(x => x.Type == LineType.Text);
         }
 
@@ -85,17 +98,22 @@ namespace Overheads.Core
 
             AllLines.Add(line);
             DisplayLines.Add(line);
+            FirstLineChords = line;
             FirstLine = line;
         }
 
         public void ShowChords()
         {
             DisplayLines = new List<Line>(AllLines);
+            FirstLineChords = AllLines.FirstOrDefault(x => x.Type == LineType.Chord);
+            FirstLine = AllLines.FirstOrDefault(x => x.Type == LineType.Text);
         }
 
         public void HideChords()
         {
             DisplayLines = AllLines.Where(x => x.Type == LineType.Text || x.Type == LineType.Repeat).ToList();
+            FirstLineChords = null;
+            FirstLine = AllLines.FirstOrDefault(x => x.Type == LineType.Text);
         }
     }
 }
