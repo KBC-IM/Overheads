@@ -41,7 +41,7 @@ namespace Overheads.Core
                 if (fileName != null && fileName.Length >= 6)
                 {
                     song.Book = fileName.Substring(0, 3);
-                    song.Number = fileName.Substring(3, 3);
+                    song.Number = fileName.Substring(3, 3).TrimStart(new char[] { '0' });
                 }
 
                 var stream = File.OpenRead(s);
@@ -123,7 +123,7 @@ namespace Overheads.Core
                 query = Books.Where(x => x.Key == bookKey).SelectMany(x => x.Songs);
             }
 
-            var ex = new Regex("[0-9]");
+            var ex = new Regex("^[0-9]+$");
             if (ex.IsMatch(searchString))
             {
                 return query.Where(x => x.Number.StartsWith(searchString)).OrderBy(x => x.Number);

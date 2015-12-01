@@ -202,6 +202,8 @@ namespace Overheads.ViewModels
                         CurrentSong = null;
                     }
                     break;
+                case Key.System:
+                    break;
                 case Key.Enter:
                     SetSong(SelectedSearchSong);
                     break;
@@ -211,11 +213,14 @@ namespace Overheads.ViewModels
                 case Key.Down:
                     NextSearchResult();
                     break;
-                case Key.F5:
-                    CurrentSong.Refresh();
+                case Key.F9:
+                    if (CurrentSong != null)
+                    {
+                        CurrentSong.Refresh();
+                    }
                     break;
                 case Key.Back:
-                    if (SearchString.Length > 0)
+                    if (SearchString != null && SearchString.Length > 0)
                     {
                         SearchString = SearchString.Substring(0, SearchString.Length - 1);    
                     }
@@ -224,7 +229,10 @@ namespace Overheads.ViewModels
                     ScreenSettings.InvertColors();
                     break;
                 case Key.OemPlus:
-                    CurrentSong.ToggleCords();
+                    if (CurrentSong != null)
+                    {
+                        CurrentSong.ToggleCords();
+                    }
                     break;
                 case Key.F1:
                     SetCurrentBook(1);
@@ -238,9 +246,19 @@ namespace Overheads.ViewModels
                 case Key.F4:
                     SetCurrentBook(4);
                     break;
+                case Key.F5:
+                    SetCurrentBook(5);
+                    break;
+                case Key.F6:
+                    SetCurrentBook(6);
+                    break;
 
                 case Key.LeftShift:
                 case Key.RightShift:
+                case Key.LeftAlt:
+                case Key.RightAlt:
+                case Key.LeftCtrl:
+                case Key.RightCtrl:
                 case Key.Tab:
                     //dont do anything for these keys
                     break;
@@ -265,6 +283,9 @@ namespace Overheads.ViewModels
                 else
                 {
                     CurrentBook = potentialBook;
+                    SelectedSearchSong = new SearchSong();
+                    SelectedSearchSong.Book = CurrentBook.Title;
+                    Console.WriteLine(SelectedSearchSong.BookNumberAndTitle);
                 }
             } 
         }

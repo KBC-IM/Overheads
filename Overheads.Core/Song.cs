@@ -127,6 +127,7 @@ namespace Overheads.Core
 
         private void ProcessHeader(string header)
         {
+            Console.WriteLine(header);
             var headerParts = header.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             
             if(headerParts.Count() == 1)
@@ -157,26 +158,36 @@ namespace Overheads.Core
         private void PreprocessOrder(string orderString)
         {
             _order = new List<OrderItem>();
-            var orderList = orderString.Split(',');
+            var orderList = orderString.Split(new Char[] { ',', ';' });
             OrderItem currentOrderItem = null;
             
             foreach(var orderItem in orderList)
             {
-                var intValue = Int32.Parse(orderItem);
+                Console.WriteLine(orderItem);
+                var intValue = 0;
+                bool result = Int32.TryParse(orderItem, out intValue);
 
-                if (currentOrderItem != null && currentOrderItem.VerseNumber == intValue)
+                if (result)
                 {
-                    currentOrderItem.RepeatCount++;
+
+                    if (currentOrderItem != null && currentOrderItem.VerseNumber == intValue)
+                    {
+                        currentOrderItem.RepeatCount++;
+                    }
+                    else
+                    {
+                        currentOrderItem = new OrderItem
+                        {
+                            VerseNumber = intValue,
+                            RepeatCount = 0
+                        };
+
+                        _order.Add(currentOrderItem);
+                    }
                 }
                 else
                 {
-                    currentOrderItem = new OrderItem
-                    {
-                        VerseNumber = intValue,
-                        RepeatCount = 0
-                    };
-
-                    _order.Add(currentOrderItem);
+                    Console.WriteLine("Failed Line");
                 }
             }
         }

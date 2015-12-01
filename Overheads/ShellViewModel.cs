@@ -1,6 +1,8 @@
+using System;
 using System.Windows;
 using Caliburn.Micro;
 using Overheads.Core;
+using Overheads.Helpers;
 using Overheads.ViewModels;
 using System.Windows.Input;
 
@@ -9,6 +11,37 @@ namespace Overheads {
     {
         public MainViewModel Main { get; set; }
         public EditViewModel Edit { get; set; }
+
+        private WindowState _state = WindowState.Normal;
+        private WindowStyle _style = WindowStyle.SingleBorderWindow;
+        private bool _fullscreen;
+
+        public WindowState State
+        {
+            get
+            {
+                return _state;
+            }
+            set
+            {
+                if (Equals(value, _state)) return;
+                _state = value;
+                NotifyOfPropertyChange(() => State);
+            }
+        }
+        public WindowStyle Style
+        {
+            get
+            {
+                return _style;
+            }
+            set
+            {
+                if (Equals(value, _style)) return;
+                _style = value;
+                NotifyOfPropertyChange(() => Style);
+            }
+        }
 
         public ShellViewModel()
         {
@@ -42,7 +75,26 @@ namespace Overheads {
                     }
                     break;
             }
-            
+            if (Keyboard.IsKeyDown(Key.RightAlt) && Keyboard.IsKeyDown(Key.Enter))
+            {
+                ToggleFullscreen();
+            }
+        }
+
+        public void ToggleFullscreen()
+        {
+            _fullscreen = !_fullscreen;
+            if (_fullscreen)
+            {
+                State = WindowState.Maximized;
+                Style = WindowStyle.None;
+            }
+            else
+            {
+                State = WindowState.Normal;
+                Style = WindowStyle.SingleBorderWindow;
+            }
+            ActivateItem(Main);
         }
 
         public void GoIntoEditMode()

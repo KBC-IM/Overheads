@@ -37,8 +37,8 @@
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row ="0" Text="{Binding CurrentSong.Title}" Foreground="{Binding ScreenSettings.TitleColor}" TextAlignment="Center" FontSize="36"></TextBlock>
-            <ItemsControl Grid.Row ="1" Tag="{Binding}" ItemsSource="{Binding CurrentSong.CurrentVerse.DisplayLines}" ItemTemplate="{StaticResource VerseTemplate}" FontSize="20"></ItemsControl>
-            <TextBlock Grid.Row ="3" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" TextAlignment="Center"></TextBlock>
+            <ItemsControl Grid.Row ="1" Tag="{Binding}" ItemsSource="{Binding CurrentSong.CurrentVerse.DisplayLines}" ItemTemplate="{StaticResource VerseTemplate}" FontSize="20" HorizontalAlignment="Center"></ItemsControl>
+            <TextBlock Grid.Row ="3" Text="{Binding CurrentSong.FirstLineOfNextVerse}" Foreground="{Binding ScreenSettings.ForegroundColor}" FontSize="20" HorizontalAlignment="Center"/>
             <Grid Grid.Row="4" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
