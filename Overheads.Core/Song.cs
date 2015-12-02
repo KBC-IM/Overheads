@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace Overheads.Core
 {
     public class Song : NotifyBase
     {
-        private string _firstLineOfNextVerse;
+        private List<Line> _firstLineOfNextVerse;
         private int _currentVerseIndex;
         private string _title;
+        private string _subtitle;
         private string _bookNumber;
         private List<Verse> _verses;
+        private string _chords;
         private Verse _currentVerse;
         private bool _showCords;
         private string _songText;
@@ -41,6 +44,17 @@ namespace Overheads.Core
             }
         }
 
+        public string Subtitle
+        {
+            get { return _subtitle; }
+            set
+            {
+                if (value == _subtitle) return;
+                _subtitle = value;
+                OnPropertyChanged("Subtitle");
+            }
+        }
+
         public List<Verse> Verses
         {
             get { return _verses; }
@@ -49,6 +63,17 @@ namespace Overheads.Core
                 if (Equals(value, _verses)) return;
                 _verses = value;
                 OnPropertyChanged("Verses");
+            }
+        }
+
+        public string Chords
+        {
+            get { return _chords; }
+            set
+            {
+                if (Equals(value, _chords)) return;
+                _chords = value;
+                OnPropertyChanged("Chords");
             }
         }
 
@@ -63,7 +88,7 @@ namespace Overheads.Core
             }
         }
 
-        public string FirstLineOfNextVerse 
+        public List<Line> FirstLineOfNextVerse 
         {
             get { return _firstLineOfNextVerse; }
             set
@@ -84,6 +109,8 @@ namespace Overheads.Core
                 OnPropertyChanged("SongText");
             }
         }
+
+        public bool ChordsVisible { get { return _showCords; } }
 
         public string Key { get; set; }
 
@@ -116,6 +143,7 @@ namespace Overheads.Core
                 }).ToList();
             }
 
+            SetChords();
             SetVerse();
         }
 
@@ -128,55 +156,72 @@ namespace Overheads.Core
         private void ProcessHeader(string header)
         {
             var headerParts = header.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            
-            if(headerParts.Count() == 1)
+
+            foreach (var part in headerParts)
             {
-                Title = headerParts.First();
-            }
-            else
-            {
-                foreach(var part in headerParts)
+
+                var keyValue = part.Split(new char[] { ':' }, 2);
+                if (keyValue[0].ToLower() == "title")
                 {
-                    var keyValue = part.Split(':');
-                    if(keyValue[0].ToLower() == "title")
-                    {
-                        Title = keyValue[1];
-                    }
-                    else if (keyValue[0].ToLower() == "order")
-                    {
-                        PreprocessOrder(keyValue[1]);
-                    }
-                    else if (keyValue[0].ToLower() == "language")
-                    {
-                        _language = keyValue[1];
-                    }
+                    Title = keyValue[1];
                 }
+                else if (keyValue[0].ToLower() == "order")
+                {
+                    PreprocessOrder(keyValue[1]);
+                }
+                else if (keyValue[0].ToLower() == "language")
+                {
+                    _language = keyValue[1];
+                }
+                else if (keyValue[0].ToLower() == "chords")
+                {
+
+                }
+                else if (keyValue[0].ToLower() == "subtitle")
+                {
+                    Subtitle = keyValue[1];
+                }
+                else
+                {
+                    Title = part;
+                }
+
             }
         }
 
         private void PreprocessOrder(string orderString)
         {
             _order = new List<OrderItem>();
-            var orderList = orderString.Split(',');
+            var orderList = orderString.Split(new Char[] { ',', ';' });
             OrderItem currentOrderItem = null;
             
             foreach(var orderItem in orderList)
             {
-                var intValue = Int32.Parse(orderItem);
+                Console.WriteLine(orderItem);
+                var intValue = 0;
+                bool result = Int32.TryParse(orderItem, out intValue);
 
-                if (currentOrderItem != null && currentOrderItem.VerseNumber == intValue)
+                if (result)
                 {
-                    currentOrderItem.RepeatCount++;
+
+                    if (currentOrderItem != null && currentOrderItem.VerseNumber == intValue)
+                    {
+                        currentOrderItem.RepeatCount++;
+                    }
+                    else
+                    {
+                        currentOrderItem = new OrderItem
+                        {
+                            VerseNumber = intValue,
+                            RepeatCount = 0
+                        };
+
+                        _order.Add(currentOrderItem);
+                    }
                 }
                 else
                 {
-                    currentOrderItem = new OrderItem
-                    {
-                        VerseNumber = intValue,
-                        RepeatCount = 0
-                    };
-
-                    _order.Add(currentOrderItem);
+                    Console.WriteLine("Failed Line");
                 }
             }
         }
@@ -210,31 +255,58 @@ namespace Overheads.Core
 
                 SetFirstLineOfNextVerse();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CurrentVerse = new Verse("", true, 0);
                 CurrentVerse.SetupErrorVerse();
             }
-            
         }
 
         private void SetFirstLineOfNextVerse()
         {
             var orderItem = _order.ElementAtOrDefault(_currentVerseIndex + 1);
+            
+            List<Line> nextLines = new List<Line> ();
 
-            if(orderItem != null)
+            if (orderItem != null)
             {
-                
-
                 var nextVerse = Verses.FirstOrDefault(x => x.VerseNumber == orderItem.VerseNumber);
 
                 var nextLine = nextVerse.FirstLine;
 
-                FirstLineOfNextVerse = nextLine.Text + "...";
+                if (ChordsVisible)
+                    nextLines.Add(new Line(nextVerse.FirstLineChords.Text, LineType.Chord));
+                nextLines.Add(new Line(nextVerse.FirstLine.Text + "...", LineType.Text));
             }
             else
+                nextLines = new List<Line>(new Line[] { new Line(""), new Line("") });
+
+            FirstLineOfNextVerse = nextLines;
+        }
+
+        private void SetChords()
+        {
+            Chords = "";
+            foreach (Verse verse in Verses)
             {
-                FirstLineOfNextVerse = "";
+                foreach (Line line in verse.AllLines)
+                {
+                    if (line.IsNotText)
+                        Chords += line.Text + " ";
+                }
+            }
+            RegexOptions options = RegexOptions.None;
+            Regex regex = new Regex(@"[ ]{2,}", options);
+            Chords = regex.Replace(Chords, @" ");
+
+            string[] chords = Chords.Split(new string[] { " ", "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            chords = chords.Distinct().ToArray();
+
+            Chords = "";
+
+            foreach(string chord in chords)
+            {
+                Chords += chord + " ";
             }
         }
 

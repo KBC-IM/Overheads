@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Overheads.Core
@@ -27,11 +28,16 @@ namespace Overheads.Core
             get { return Type == LineType.Chord || Type == LineType.Repeat; }
         }
 
+        public bool IsRepeat
+        {
+            get { return Type == LineType.Repeat || Type == LineType.Repeat; }
+        }
+
         public Line(string lineText, LineType? overrideLineType = null)
         {
-            var trimmedLineText = lineText.Trim();
+            var trimmedLineText = lineText.TrimEnd();
 
-            if(overrideLineType != null)
+            if (overrideLineType != null)
             {
                 Type = overrideLineType.Value;
                 Text = lineText;
@@ -42,7 +48,21 @@ namespace Overheads.Core
             {
                 Type = LineType.Chord;
 
-                Text = trimmedLineText.Substring(0, trimmedLineText.Length - 1);
+                int lastLocation = trimmedLineText.LastIndexOf("%");
+
+                if (lastLocation > -1)
+                    trimmedLineText = trimmedLineText.Substring(0, lastLocation);
+
+                Text = trimmedLineText;
+                
+                for(int c = 0; c < Text.Length; c++)
+                {
+                    if(Text[c] == ' ')
+                    {
+                        Text = Text.Insert(c, "  ");
+                        c+=2;
+                    }
+                }
             }
             else
             {

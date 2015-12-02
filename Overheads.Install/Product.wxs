@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Overheads" Language="1033" Version="1.0.0.0" Manufacturer="JBloom" UpgradeCode="f9352001-3c16-46da-8852-6a048be5c07d">
+	<Product Id="*" Name="Overheads" Language="1033" Version="1.0.2.0" Manufacturer="JBloom" UpgradeCode="f9352001-3c16-46da-8852-6a048be5c07d">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of Overheads is already installed." />
 		<MediaTemplate />
+
+    <UI>
+      <UIRef Id="WixUI_Minimal" />
+      <Publish Dialog="ExitDialog"
+               Control="Finish"
+               Event="DoAction"
+               Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+    </UI>
 
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Overheads" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
@@ -15,7 +23,12 @@
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
     
+    <Icon Id="Overheads.ico" SourceFile="..\Overheads\Overheads.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="Overheads.ico" />
+    
     <UIRef Id="WixUI_Minimal"/>
+    <WixVariable Id="WixUILicenseRtf" Value="license.rtf"/>
+    <!--<WixUIBannerBmp></WixUIBannerBmp>-->
 	</Product>
   
 	<Fragment>
@@ -33,13 +46,14 @@
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			 <Component Id="OverheadsComponent" Guid="b04546fc-1a19-45fa-b689-66a49cfa8c03">
-         <File Source="..\Overheads\bin\debug\Overheads.exe" Id="overheads" >
+         <File Source="..\Overheads\bin\debug\Overheads.exe" Id="overheads" KeyPath="yes">
            <Shortcut
             Id="ApplicationDesktopShortcut"
             Name="Overheads"
             Description="Song Displayer"
             Directory="DesktopFolder"
             WorkingDirectory="INSTALLFOLDER"
+            Icon="Overheads.ico"
             Advertise="yes"/>
          </File>
 			 </Component>
@@ -54,6 +68,9 @@
       </Component>
       <Component Id="InteractivityComponent" Guid="a7f7b282-32a1-44be-8176-41d402e5fc02">
         <File Source="..\Overheads\bin\debug\System.Windows.Interactivity.dll" Id="interactivity"/>
+      </Component>
+      <Component Id="AurelienRibon.Ui.SyntaxHighlightBox.dll" Guid="F7A2B16A-C729-42FB-9A47-122EC1588861">
+        <File Source="..\Overheads\AurelienRibon.Ui.SyntaxHighlightBox.dll"/>
       </Component>
     </ComponentGroup>
 	</Fragment>

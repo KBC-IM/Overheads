@@ -1,9 +1,9 @@
-﻿
-namespace Overheads.Core
+﻿namespace Overheads.Core
 {
     public class SearchSong
     {
         public string Title { get; set; }
+        public string Subtitle { get; set; }
         public string FirstLine { get; set; }
         public string Key { get; set; }
         public string Number { get; set; }
@@ -11,7 +11,7 @@ namespace Overheads.Core
 
         public string BookNumberAndTitle
         {
-            get { return string.Format("{0} {1} - {2}", Book, Number, Title); }
+            get { return string.Format("{0} {1} - {2} - ", Book, Number, Title); }
         }
 
         public string BookNumber
