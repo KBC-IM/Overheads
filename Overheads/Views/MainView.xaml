@@ -15,14 +15,14 @@
         <helpers:MarginConverter x:Key="MarginConverter"/>
         <DataTemplate x:Key="VerseTemplate">
             <Grid Focusable="False">
-                <TextBlock Text="{Binding Text}" 
+                <TextBlock Text="{Binding Text}"
                            Visibility="{Binding IsNotText, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter} }"
-                           Foreground="{Binding Tag.ScreenSettings.ForegroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
+                           Foreground="{Binding Tag.ScreenSettings.ForegroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
                            FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=1.1}"
                            FontFamily="Lucida Sans"
                            TextAlignment="Left"></TextBlock>
 
-                <TextBlock Text="{Binding Text}" 
+                <TextBlock Text="{Binding Text}"
                            Visibility="{Binding IsNotText, Converter={StaticResource BoolToVisibilityConverter} }"
                            Foreground="{Binding Tag.ScreenSettings.SpecialColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                            FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=.57}" 

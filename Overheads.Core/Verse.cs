@@ -35,7 +35,7 @@ namespace Overheads.Core
             }
         }
 
-        private Line _firstLineChords;
+        private Line _firstLineChords = new Line("", LineType.Chord);
         public Line FirstLineChords
         {
             get { return _firstLineChords; }
@@ -112,7 +112,7 @@ namespace Overheads.Core
         public void HideChords()
         {
             DisplayLines = AllLines.Where(x => x.Type == LineType.Text || x.Type == LineType.Repeat).ToList();
-            FirstLineChords = null;
+            FirstLineChords = new Line("", LineType.Chord);
             FirstLine = AllLines.FirstOrDefault(x => x.Type == LineType.Text);
         }
     }

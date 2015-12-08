@@ -271,10 +271,8 @@ namespace Overheads.Core
             if (orderItem != null)
             {
                 var nextVerse = Verses.FirstOrDefault(x => x.VerseNumber == orderItem.VerseNumber);
-
-                var nextLine = nextVerse.FirstLine;
-
-                if (ChordsVisible)
+                
+                if(nextVerse.FirstLineChords != null)
                     nextLines.Add(new Line(nextVerse.FirstLineChords.Text, LineType.Chord));
                 nextLines.Add(new Line(nextVerse.FirstLine.Text + "...", LineType.Text));
             }
