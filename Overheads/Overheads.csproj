@@ -97,7 +97,6 @@
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="Helpers\BoolToVisibilityConverter.cs" />
-    <Compile Include="Helpers\CustomDocumentPaginator.cs" />
     <Compile Include="Helpers\HeightToFontSizeConverter.cs" />
     <Compile Include="Helpers\MarginConverter.cs" />
     <Compile Include="Helpers\ScreenSettings.cs" />
