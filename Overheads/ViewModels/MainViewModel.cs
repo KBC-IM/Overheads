@@ -37,7 +37,11 @@ namespace Overheads.ViewModels
         public bool NextLineAvailable
         {
             get {
-                if(CurrentSong.FirstLineOfNextVerse.Count > 1)
+                if (CurrentSong.FirstLineOfNextVerse == null)
+                    return false;
+                else if (CurrentSong.FirstLineOfNextVerse.Count < 1)
+                    return false;
+                else if (CurrentSong.FirstLineOfNextVerse.Count > 1)
                     return string.IsNullOrEmpty(CurrentSong.FirstLineOfNextVerse[1].Text) == false;
                 else
                     return string.IsNullOrEmpty(CurrentSong.FirstLineOfNextVerse[0].Text) == false;
@@ -226,6 +230,7 @@ namespace Overheads.ViewModels
             CurrentSong = BookManager.LoadSong(song.Key);
             CurrentSong.BookNumber = song.BookNumber;
 
+            CurrentBook = null;
             SearchResults = null;
             SelectedSearchSong = null;
             SearchString = null;
@@ -339,7 +344,6 @@ namespace Overheads.ViewModels
                     CurrentBook = potentialBook;
                     SelectedSearchSong = new SearchSong();
                     SelectedSearchSong.Book = CurrentBook.Title;
-                    Console.WriteLine(SelectedSearchSong.BookNumberAndTitle);
                 }
             } 
         }

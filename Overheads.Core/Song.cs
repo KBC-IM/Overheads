@@ -234,7 +234,7 @@ namespace Overheads.Core
                 {
                     _currentVerseIndex = overrideCurrentIndex.Value;
                 }
-
+                
                 var orderItem = _order.ElementAt(_currentVerseIndex);
 
                 CurrentVerse = Verses.FirstOrDefault(x => x.VerseNumber == orderItem.VerseNumber);
@@ -244,7 +244,7 @@ namespace Overheads.Core
                     CurrentVerse.AddRepeatLine(orderItem.RepeatCount);
                 }
                 
-                if(_showCords)
+                if (_showCords)
                 {
                     CurrentVerse.ShowChords();
                 }
@@ -252,8 +252,8 @@ namespace Overheads.Core
                 {
                     CurrentVerse.HideChords();
                 }
-
-                SetFirstLineOfNextVerse();
+                
+                SetFirstLineOfNextVerse(_showCords);
             }
             catch (Exception)
             {
@@ -262,22 +262,24 @@ namespace Overheads.Core
             }
         }
 
-        private void SetFirstLineOfNextVerse()
+        private void SetFirstLineOfNextVerse(bool showChords)
         {
             var orderItem = _order.ElementAtOrDefault(_currentVerseIndex + 1);
             
-            List<Line> nextLines = new List<Line> ();
+            List<Line> nextLines = new List<Line>();
 
             if (orderItem != null)
             {
                 var nextVerse = Verses.FirstOrDefault(x => x.VerseNumber == orderItem.VerseNumber);
                 
-                if(nextVerse.FirstLineChords != null)
-                    nextLines.Add(new Line(nextVerse.FirstLineChords.Text, LineType.Chord));
-                nextLines.Add(new Line(nextVerse.FirstLine.Text + "...", LineType.Text));
+                for (int i = 0; i < nextVerse.FirstLine.Count; i++)
+                {
+                    if (nextVerse.FirstLine[i].Type == LineType.Text)
+                        nextLines.Add(new Line(nextVerse.FirstLine[i].Text + "...", LineType.Text));
+                    else if (showChords)
+                        nextLines.Add(new Line(nextVerse.FirstLine[i].Text, LineType.Chord));
+                }
             }
-            else
-                nextLines = new List<Line>(new Line[] { new Line(""), new Line("") });
 
             FirstLineOfNextVerse = nextLines;
         }

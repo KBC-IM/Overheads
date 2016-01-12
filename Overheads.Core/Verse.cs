@@ -23,8 +23,8 @@ namespace Overheads.Core
             }
         }
 
-        private Line _firstLine;
-        public Line FirstLine
+        private List<Line> _firstLine;
+        public List<Line> FirstLine
         {
             get { return _firstLine; }
             set
@@ -32,18 +32,6 @@ namespace Overheads.Core
                 if (value == _firstLine) return;
                 _firstLine = value;
                 OnPropertyChanged("FirstLine");
-            }
-        }
-
-        private Line _firstLineChords = new Line("", LineType.Chord);
-        public Line FirstLineChords
-        {
-            get { return _firstLineChords; }
-            set
-            {
-                if (value == _firstLineChords) return;
-                _firstLineChords = value;
-                OnPropertyChanged("FirstLineChords");
             }
         }
 
@@ -68,9 +56,6 @@ namespace Overheads.Core
             {
                 HideChords();
             }
-
-            FirstLineChords = AllLines.FirstOrDefault(x => x.Type == LineType.Chord);
-            FirstLine = AllLines.FirstOrDefault(x => x.Type == LineType.Text);
         }
 
         public void AddRepeatLine(int numberOfRepeats)
@@ -98,22 +83,23 @@ namespace Overheads.Core
 
             AllLines.Add(line);
             DisplayLines.Add(line);
-            FirstLineChords = line;
-            FirstLine = line;
+            FirstLine = null;
         }
 
         public void ShowChords()
         {
             DisplayLines = new List<Line>(AllLines);
-            FirstLineChords = AllLines.FirstOrDefault(x => x.Type == LineType.Chord);
-            FirstLine = AllLines.FirstOrDefault(x => x.Type == LineType.Text);
+            FirstLine = new List<Line>();
+            FirstLine.Add(AllLines.FirstOrDefault(x => x.Type == LineType.Chord));
+            FirstLine.Add(AllLines.FirstOrDefault(x => x.Type == LineType.Text));
         }
 
         public void HideChords()
         {
             DisplayLines = AllLines.Where(x => x.Type == LineType.Text || x.Type == LineType.Repeat).ToList();
-            FirstLineChords = new Line("", LineType.Chord);
-            FirstLine = AllLines.FirstOrDefault(x => x.Type == LineType.Text);
+            FirstLine = new List<Line>();
+            FirstLine.Add(AllLines.FirstOrDefault(x => x.Type == LineType.Chord));
+            FirstLine.Add(AllLines.FirstOrDefault(x => x.Type == LineType.Text));
         }
     }
 }

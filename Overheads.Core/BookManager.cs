@@ -169,7 +169,6 @@ namespace Overheads.Core
             var stream = File.OpenWrite(song.Key);
             var sw = new StreamWriter(stream);
             sw.Write(song.SongText);
-
             sw.Close();
 
             if (needsLoaded)
