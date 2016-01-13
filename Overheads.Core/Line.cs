@@ -44,6 +44,12 @@ namespace Overheads.Core
             }
             //The % sign at the end of the line is a convention 
             //that indicates that the line is a set of chords
+
+            else if (trimmedLineText.StartsWith("("))
+            {
+                Type = LineType.Repeat;
+                Text = lineText;
+            }
             else if (trimmedLineText.EndsWith("%"))
             {
                 Type = LineType.Chord;
