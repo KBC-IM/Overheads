@@ -19,7 +19,7 @@
                            Visibility="{Binding IsNotText, ConverterParameter='opposite', Converter={StaticResource BoolToVisibilityConverter} }"
                            Foreground="{Binding Tag.ScreenSettings.ForegroundColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
                            FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=1.1}"
-                           FontFamily="Lucida Sans"
+                           FontFamily="Lucida"
                            TextAlignment="Left"></TextBlock>
 
                 <TextBlock Text="{Binding Text}"
@@ -28,7 +28,7 @@
                            FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=.57}" 
                            FontWeight="Bold"
                            TextAlignment="Left"
-                           FontFamily="Lucida Sans"
+                           FontFamily="Lucida"
                            Margin="0,-10,0,-10"></TextBlock>
 
             </Grid>

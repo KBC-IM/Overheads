@@ -38,8 +38,6 @@ namespace Overheads.Core
                 else
                     Books.Add(book);
                 LoadSongs(book.Key, book);
-
-                Console.WriteLine("Loaded Book");
             }
             Cursor.Current = Cursors.Default;
         }

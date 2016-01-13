@@ -16,6 +16,7 @@ namespace Overheads.Core
         private string _bookNumber;
         private List<Verse> _verses;
         private string _chords;
+        private string _topic;
         private Verse _currentVerse;
         private bool _showCords;
         private string _songText;
@@ -74,6 +75,17 @@ namespace Overheads.Core
                 if (Equals(value, _chords)) return;
                 _chords = value;
                 OnPropertyChanged("Chords");
+            }
+        }
+
+        public string Topic
+        {
+            get { return _topic; }
+            set
+            {
+                if (Equals(value, _topic)) return;
+                _topic = value;
+                OnPropertyChanged("Topic");
             }
         }
 
@@ -175,7 +187,11 @@ namespace Overheads.Core
                 }
                 else if (keyValue[0].ToLower() == "chords")
                 {
-
+                    _chords = keyValue[1];
+                }
+                else if (keyValue[0].ToLower() == "topic")
+                {
+                    _topic = keyValue[1];
                 }
                 else if (keyValue[0].ToLower() == "subtitle")
                 {
@@ -197,7 +213,6 @@ namespace Overheads.Core
             
             foreach(var orderItem in orderList)
             {
-                Console.WriteLine(orderItem);
                 var intValue = 0;
                 bool result = Int32.TryParse(orderItem, out intValue);
 
@@ -252,7 +267,6 @@ namespace Overheads.Core
                 {
                     CurrentVerse.HideChords();
                 }
-                
                 SetFirstLineOfNextVerse(_showCords);
             }
             catch (Exception)
@@ -271,13 +285,15 @@ namespace Overheads.Core
             if (orderItem != null)
             {
                 var nextVerse = Verses.FirstOrDefault(x => x.VerseNumber == orderItem.VerseNumber);
-                
                 for (int i = 0; i < nextVerse.FirstLine.Count; i++)
                 {
-                    if (nextVerse.FirstLine[i].Type == LineType.Text)
-                        nextLines.Add(new Line(nextVerse.FirstLine[i].Text + "...", LineType.Text));
-                    else if (showChords)
-                        nextLines.Add(new Line(nextVerse.FirstLine[i].Text, LineType.Chord));
+                    if (nextVerse.FirstLine[i] != null)
+                    {
+                        if (nextVerse.FirstLine[i].Type == LineType.Text)
+                            nextLines.Add(new Line(nextVerse.FirstLine[i].Text + "...", LineType.Text));
+                        else if (showChords)
+                            nextLines.Add(new Line(nextVerse.FirstLine[i].Text, LineType.Chord));
+                    }
                 }
             }
 

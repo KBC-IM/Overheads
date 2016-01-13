@@ -14,6 +14,7 @@ namespace Overheads.Core
         public static string Photo = "photo";
         public static string Language = "language";
         public static string Subtitle = "subtitle";
+        public static string Topic = "topic";
 
         public static bool IsHeaderValue(string value)
         {
@@ -22,7 +23,8 @@ namespace Overheads.Core
                    value == Chords ||
                    value == Photo ||
                    value == Language ||
-                   value == Subtitle;
+                   value == Subtitle ||
+                   value == Topic;
         }
     }
 }
