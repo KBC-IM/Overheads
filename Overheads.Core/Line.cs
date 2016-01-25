@@ -28,9 +28,14 @@ namespace Overheads.Core
             get { return Type == LineType.Chord || Type == LineType.Repeat; }
         }
 
+        public bool IsChord
+        {
+            get { return Type == LineType.Chord; }
+        }
+
         public bool IsRepeat
         {
-            get { return Type == LineType.Repeat || Type == LineType.Repeat; }
+            get { return Type == LineType.Repeat; }
         }
 
         public Line(string lineText, LineType? overrideLineType = null)
@@ -42,6 +47,7 @@ namespace Overheads.Core
                 Type = overrideLineType.Value;
                 Text = lineText;
             }
+
             //The % sign at the end of the line is a convention 
             //that indicates that the line is a set of chords
 

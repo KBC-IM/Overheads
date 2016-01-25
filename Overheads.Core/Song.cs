@@ -322,7 +322,8 @@ namespace Overheads.Core
 
             foreach(string chord in chords)
             {
-                Chords += chord + " ";
+                if(!chord.Contains("(") || !chord.Contains(")"))
+                    Chords += chord + " ";
             }
         }
 

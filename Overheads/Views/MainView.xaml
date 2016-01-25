@@ -23,13 +23,20 @@
                            TextAlignment="Left"></TextBlock>
 
                 <TextBlock Text="{Binding Text}"
-                           Visibility="{Binding IsNotText, Converter={StaticResource BoolToVisibilityConverter} }"
+                           Visibility="{Binding IsChord, Converter={StaticResource BoolToVisibilityConverter} }"
                            Foreground="{Binding Tag.ScreenSettings.SpecialColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
                            FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=.57}" 
                            FontWeight="Bold"
                            TextAlignment="Left"
                            FontFamily="Lucida"
                            Margin="0,-10,0,-10"></TextBlock>
+
+                <TextBlock Text="{Binding Text}"
+                           Visibility="{Binding IsRepeat, Converter={StaticResource BoolToVisibilityConverter} }"
+                           Foreground="{Binding Tag.ScreenSettings.InstructionColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" 
+                           FontSize="{Binding ElementName=Title, Path=ActualHeight, Converter={StaticResource HeightToFontSizeConverter}, ConverterParameter=.7}" 
+                           TextAlignment="Left"
+                           FontFamily="Lucida"></TextBlock>
 
             </Grid>
         </DataTemplate>
