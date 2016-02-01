@@ -19,7 +19,6 @@ namespace Overheads
 
             SourceInitialized += ShellViewModel.OnSourceInitialized;
             Closing += ShellViewModel.OnWindowClosing;
-            KeyDown += ShellViewModel.OnKeyDown;
         }
     }
 }

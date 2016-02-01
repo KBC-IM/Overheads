@@ -133,7 +133,7 @@ namespace Overheads.Core
             Verses = new List<Verse>();
 
             SongText = text;
-            var songSections = SongText.Split('=');
+            var songSections = SongText.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
 
             ProcessHeader(songSections.First());
             

@@ -184,7 +184,9 @@ namespace Overheads.Core
 
         public static IEnumerable<SearchSong> SearchSongs(string searchString, string bookKey = null)
         {
-            searchString = searchString.Replace("psalms", "psalm");
+            searchString = searchString.ToUpper().Replace("psalms", "psalm").Replace(",", "").Replace("'", "").Replace("12 ", "twelve ").Replace("10 ", "ten ").Replace(" 7 ", " seven ");
+
+
             if (string.IsNullOrEmpty(searchString))
             {
                 return null;
@@ -196,14 +198,14 @@ namespace Overheads.Core
             {
                 query = Books.Where(x => x.Key == bookKey).SelectMany(x => x.Songs);
             }
-
+            
             var ex = new Regex("^[0-9]+$");
             if (ex.IsMatch(searchString))
             {
                 return query.Where(x => x.Number.StartsWith(searchString)).OrderBy(x => x.Number);
             }
                 
-            return query.Where(x => x.FirstLine.ToUpper().Contains(searchString.ToUpper()) || x.Title.ToUpper().Contains(searchString.ToUpper()));
+            return query.Where(x => x.FirstLine.ToUpper().Replace("psalms", "psalm").Replace(",", "").Replace("'", "").Contains(searchString.ToUpper()) || x.Title.ToUpper().Replace("psalms", "psalm").Replace(",", "").Replace("'", "").Contains(searchString.ToUpper()));
         }
     }
 }

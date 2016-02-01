@@ -142,5 +142,17 @@ namespace Overheads.Properties {
                 this["AutoMinimize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EditInMainWindow {
+            get {
+                return ((bool)(this["EditInMainWindow"]));
+            }
+            set {
+                this["EditInMainWindow"] = value;
+            }
+        }
     }
 }

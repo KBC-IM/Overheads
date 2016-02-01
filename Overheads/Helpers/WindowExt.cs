@@ -14,7 +14,7 @@ namespace Overheads.Helpers
                 if (!window.IsLoaded)
                     window.WindowStartupLocation = WindowStartupLocation.Manual;
 
-                var workingArea = primaryScreen.WorkingArea;
+                var workingArea = primaryScreen.Bounds;
 
                 window.Left = workingArea.Left;
                 window.Top = workingArea.Top;
@@ -37,7 +37,7 @@ namespace Overheads.Helpers
                 if (!window.IsLoaded)
                     window.WindowStartupLocation = WindowStartupLocation.Manual;
 
-                var workingArea = secondaryScreen.WorkingArea;
+                var workingArea = secondaryScreen.Bounds;
 
                 window.Left = workingArea.Left;
                 window.Top = workingArea.Top;
@@ -64,7 +64,19 @@ namespace Overheads.Helpers
                 window.WindowState = WindowState.Normal;
                 window.WindowStyle = WindowStyle.SingleBorderWindow;
                 Properties.Settings.Default.Fullscreen = true;
+
+                var screen = System.Windows.Forms.Screen.AllScreens.Where(s => s.Primary).FirstOrDefault();
+                if (Properties.Settings.Default.MaximizeToSecondary)
+                    screen = System.Windows.Forms.Screen.AllScreens.Where(s => !s.Primary).FirstOrDefault();
+
+                var workingArea = screen.Bounds;
+
+                window.Left = workingArea.Left;
+                window.Top = workingArea.Top;
+                window.Width = workingArea.Width;
+                window.Height = workingArea.Height;
             }
+            window.Topmost = true;
         }
 
         public static System.Windows.Forms.IWin32Window GetIWin32Window(this System.Windows.Media.Visual visual)

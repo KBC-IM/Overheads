@@ -18,8 +18,8 @@
         <CheckBox x:Name="cbxThemeShortcut" Content="Theme Shortcut Enabled" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=ThemeShortcutEnabled, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,48,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="cbxFullScreen" Content="Maximize On Start" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=Fullscreen, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,91,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="cbxMaximizeToSecondary" Content="Maximize To Secondary Monitor" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=MaximizeToSecondary, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,111,0,0" VerticalAlignment="Top"/>
-        <GroupBox x:Name="groupBox" Header="Window Settings" HorizontalAlignment="Left" Margin="193,68,0,0" VerticalAlignment="Top" Height="88" Width="227"/>
-        <CheckBox x:Name="cbxHideCursor" Content="Hide Cursor Over Songs" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=HideCursor, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,165,0,0" VerticalAlignment="Top"/>
+        <GroupBox x:Name="groupBox" Header="Window Settings" HorizontalAlignment="Left" Margin="193,68,0,0" VerticalAlignment="Top" Height="107" Width="227"/>
+        <CheckBox x:Name="cbxHideCursor" Content="Hide Cursor Over Songs" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=HideCursor, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,180,0,0" VerticalAlignment="Top"/>
 
         <TextBox x:Name="tbxSongsDirectory" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Margin="209,245,0,0" TextWrapping="Wrap" Text="{Binding Source={x:Static e:Settings.Default}, Path=Path, Mode=TwoWay}" Width="186" Background="White" Foreground="Black" />
 
@@ -27,7 +27,8 @@
         <Label x:Name="lblDirectory" Content="Books Directory" HorizontalAlignment="Left" Margin="209,219,0,0" VerticalAlignment="Top"/>
         <Button Command="{Binding PrintIndexCommand}" x:Name="btnPrintIndex" Content="Print Index" HorizontalAlignment="Left" Margin="18,270,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Command="{Binding PrintSongCommand}" x:Name="btnPrintCurrentSong" Content="Print Current Song" HorizontalAlignment="Left" Margin="103,270,0,0" VerticalAlignment="Top" Width="110"/>
-        <CheckBox x:Name="cbxDisplayChords" Content="Display Chords" HorizontalAlignment="Left" Margin="209,185,0,0" VerticalAlignment="Top" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=DisplayChords, Mode=TwoWay}"/>
+        <CheckBox x:Name="cbxDisplayChords" Content="Display Chords" HorizontalAlignment="Left" Margin="209,200,0,0" VerticalAlignment="Top" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=DisplayChords, Mode=TwoWay}"/>
         <CheckBox x:Name="cbxAutoMinimize" Content="Auto Minimize On Menu" HorizontalAlignment="Left" Margin="209,130,0,0" VerticalAlignment="Top" Width="186" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=AutoMinimize, Mode=TwoWay}"/>
+        <CheckBox x:Name="cbxEditInSeperateWindow" Content="Edit In Seperate Window" HorizontalAlignment="Left" Margin="209,150,0,0" VerticalAlignment="Top" Width="186" IsChecked="{Binding EditInMainWindow, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
     </Grid>
 </UserControl>

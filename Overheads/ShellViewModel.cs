@@ -65,34 +65,48 @@ namespace Overheads {
             if (Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.S))
                 GoIntoSettings();
             else if (Keyboard.IsKeyDown(Key.RightAlt) && Keyboard.IsKeyDown(Key.Enter))
+            {
                 WindowExt.ToggleFullscreen(Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive));
+                HackTheFocus();
+            }
         }
 
         public void GoIntoEditMode()
         {
-            if (ActiveItem is MainViewModel)
+            if (Settings.Default.EditInMainWindow)
             {
-                if (Main.CurrentSong != null && !string.IsNullOrEmpty(Main.CurrentSong.Key))
+                if (ActiveItem is MainViewModel)
                 {
-                    Edit.CurrentSong = new Song(Main.CurrentSong.SongText, Main.CurrentSong.Key);
-                    ActivateItem(Edit);
+                    if (Main.CurrentSong != null && !string.IsNullOrEmpty(Main.CurrentSong.Key))
+                    {
+                        Edit.CurrentSong = new Song(Main.CurrentSong.SongText, Main.CurrentSong.Key);
+                        ActivateItem(Edit);
+                    }
                 }
-            }
-            else if (!String.Equals(Edit.CurrentSong.SongText, Main.CurrentSong.SongText))
-            {
-                MessageBoxButton buttons = MessageBoxButton.YesNoCancel;
-                MessageBoxResult dr = MessageBox.Show("Would you like to save changes to this song?", "Save Changes", buttons);
+                else if (!String.Equals(Edit.CurrentSong.SongText, Main.CurrentSong.SongText))
+                {
+                    MessageBoxButton buttons = MessageBoxButton.YesNoCancel;
+                    MessageBoxResult dr = MessageBox.Show("Would you like to save changes to this song?", "Save Changes", buttons);
 
-                if (dr == MessageBoxResult.Yes)
-                {
-                    BookManager.SaveSong(Edit.CurrentSong);
-                    GoBackToMain();
+                    if (dr == MessageBoxResult.Yes)
+                    {
+                        BookManager.SaveSong(Edit.CurrentSong);
+                        GoBackToMain();
+                    }
+                    else if (dr == MessageBoxResult.No)
+                        GoBackToMain();
                 }
-                else if (dr == MessageBoxResult.No)
+                else
                     GoBackToMain();
             }
             else
-                GoBackToMain();
+            {
+                Window editWin = ShowWindow(Edit);
+                if (Main.CurrentSong != null && !string.IsNullOrEmpty(Main.CurrentSong.Key))
+                {
+                    Edit.CurrentSong = new Song(Main.CurrentSong.SongText, Main.CurrentSong.Key);
+                }
+            }
         }
 
         public void GoBackToMain()
@@ -102,17 +116,21 @@ namespace Overheads {
             HackTheFocus();
         }
 
+        public Window ShowWindow(object viewModel)
+        {
+            var win = new Window();
+            win.DataContext = viewModel;
+            win.Show();
+            return win;
+        }
+
         public void GoIntoSettings()
         {
             if(ActiveItem is MainViewModel)
-            {
                 ActivateItem(Setting);
-            }
             else
-            {
                 ActivateItem(Main);
-                HackTheFocus();
-            }
+            HackTheFocus();
         }
 
         public void HackTheFocus()
@@ -145,19 +163,10 @@ namespace Overheads {
 
         public static void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            Console.WriteLine("Closing");
             Window window = sender as Window;
             Settings.Default.MainWindowPlacement = window.GetPlacement();
             Settings.Default.Save();
             Core.Properties.Settings.Default.Save();
-        }
-
-        public static void OnKeyDown(object sender, EventArgs e)
-        {
-            if (Keyboard.IsKeyDown(Key.RightAlt) && Keyboard.IsKeyDown(Key.Enter))
-            {
-                WindowExt.ToggleFullscreen(sender as Window);
-            }
         }
     }
 }
