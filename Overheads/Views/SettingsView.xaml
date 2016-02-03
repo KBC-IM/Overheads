@@ -29,6 +29,6 @@
         <Button Command="{Binding PrintSongCommand}" x:Name="btnPrintCurrentSong" Content="Print Current Song" HorizontalAlignment="Left" Margin="103,270,0,0" VerticalAlignment="Top" Width="110"/>
         <CheckBox x:Name="cbxDisplayChords" Content="Display Chords" HorizontalAlignment="Left" Margin="209,200,0,0" VerticalAlignment="Top" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=DisplayChords, Mode=TwoWay}"/>
         <CheckBox x:Name="cbxAutoMinimize" Content="Auto Minimize On Menu" HorizontalAlignment="Left" Margin="209,130,0,0" VerticalAlignment="Top" Width="186" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=AutoMinimize, Mode=TwoWay}"/>
-        <CheckBox x:Name="cbxEditInSeperateWindow" Content="Edit In Seperate Window" HorizontalAlignment="Left" Margin="209,150,0,0" VerticalAlignment="Top" Width="186" IsChecked="{Binding EditInMainWindow, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+        <CheckBox x:Name="cbxEditInSeperateWindow" Content="Edit In Same Window" HorizontalAlignment="Left" Margin="209,150,0,0" VerticalAlignment="Top" Width="186" IsChecked="{Binding EditInMainWindow, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
     </Grid>
 </UserControl>

@@ -45,7 +45,8 @@ namespace Overheads.Core
             var lines = verseText.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var lineText in lines)
             {
-                AllLines.Add(new Line(lineText));
+                if(!lineText.Contains('\t'))
+                    AllLines.Add(new Line(lineText));
             }
 
             if(showChords)
